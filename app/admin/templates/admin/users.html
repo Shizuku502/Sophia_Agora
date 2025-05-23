@@ -1,0 +1,66 @@
+<!--users.html-->
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>使用者管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/users_form.css') }}">
+</head>
+
+<body>
+    
+    <div class="admin-container">
+        
+        <h2>使用者列表</h2>
+        <a href="{{ url_for('admin.add_user') }}">新增使用者</a>
+        
+        <form method="GET" action="{{ url_for('admin.list_users') }}">
+            <input type="text" name="keyword" placeholder="輸入搜尋關鍵字" value="{{ keyword }}">
+            <select name="role">
+                <option value="">全部角色</option>
+                <option value="student" {% if role == 'student' %}selected{% endif %}>學生</option>
+                <option value="teacher" {% if role == 'teacher' %}selected{% endif %}>教師</option>
+                <option value="admin" {% if role == 'admin' %}selected{% endif %}>管理員</option>
+            </select>
+            <button type="submit">搜尋</button>
+            <a href="{{ url_for('admin.list_users') }}">清除篩選</a>
+        </form>
+
+        <table>
+            
+            <thead>
+                
+                <tr>
+                    <th>帳號</th>
+                    <th>角色</th>
+                    <th>狀態</th>
+                    <th>上次登入</th>
+                    <th>操作</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                {% for user in users %}
+                <tr class="{{ user.role }}">  <!-- 依照使用者角色套用 class -->
+                    <td>{{ user.account_id }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="{{ user.status }}">{{ user.status }}</td>  <!-- ✅ 狀態顯示不同顏色 -->
+                    <td>{{ user.last_login or "無紀錄" }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}">
+                            <button type="submit" class="delete-btn">刪除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

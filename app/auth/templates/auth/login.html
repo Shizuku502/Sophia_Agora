@@ -1,0 +1,44 @@
+<!-- app/auth/templates/auth/login.html -->
+{% extends "base.html" %}
+
+{% block title %}登入 | Sophia Agora{% endblock %}
+
+{% block content %}
+<h2>使用者登入</h2>
+
+<form action="{{ url_for('auth.login') }}" method="POST">
+    <div>
+        <label for="account_id">帳號:</label>
+        <input type="text" id="account_id" name="account_id" placeholder="請輸入帳號" required>
+    </div>
+
+    <div>
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" placeholder="請輸入密碼" required>
+        <button type="button" id="toggleBtn" onclick="togglePassword()">顯示</button>
+    </div>
+
+    {% if errorMsg %}
+        <h3 style="color: red;">{{ errorMsg|safe }}</h3>
+    {% endif %}
+
+    <button type="submit">登入</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function togglePassword() {
+        const pwdInput = document.getElementById('password');
+        const btn = document.getElementById('toggleBtn');
+
+        if (pwdInput.type === "password") {
+            pwdInput.type = "text";
+            btn.textContent = "隱藏";
+        } else {
+            pwdInput.type = "password";
+            btn.textContent = "顯示";
+        }
+    }
+</script>
+{% endblock %}

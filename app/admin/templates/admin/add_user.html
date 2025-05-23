@@ -1,0 +1,77 @@
+<!--add_user.html-->
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>新增使用者</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/add_user_form.css') }}">
+</head>
+<body>
+
+<div class="form-container role-student" id="user-form">
+  <h2>新增使用者</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <label>帳號：</label>
+    <input type="text" name="account_id" id="account_id" required>
+
+    <label>密碼：</label>
+    <input type="password" name="password" required>
+
+    <label>暱稱：</label>
+    <input type="text" name="nickname">
+
+    <label>角色：</label>
+    <select name="role" id="role" required>
+      <option value="student">學生</option>
+      <option value="teacher">教師</option>
+      <option value="admin">管理員</option>
+    </select>
+
+    <button type="submit">新增</button>
+  </form>
+</div>
+
+<script>
+  const roleSelect = document.getElementById("role");
+  const accountInput = document.getElementById("account_id");
+  const formDiv = document.getElementById("user-form");
+
+  function updateFormColor() {
+    formDiv.classList.remove("role-student", "role-teacher", "role-admin");
+    formDiv.classList.add("role-" + roleSelect.value);
+  }
+
+  function autoSelectRole() {
+    const value = accountInput.value.trim().toUpperCase();
+    if (value.startsWith("T")) {
+      roleSelect.value = "teacher";
+    } else if (value.startsWith("D")) {
+      roleSelect.value = "student";
+    } else if (value.startsWith("A")) {
+      roleSelect.value = "admin";
+    }
+    updateFormColor();
+  }
+
+  // 初始化時設定顏色
+  updateFormColor();
+
+  // 綁定事件：輸入帳號時自動判斷角色
+  accountInput.addEventListener("input", autoSelectRole);
+
+  // 手動改選角色時更新背景
+  roleSelect.addEventListener("change", updateFormColor);
+</script>
+
+</body>
+</html>

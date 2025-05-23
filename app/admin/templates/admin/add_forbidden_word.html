@@ -1,0 +1,28 @@
+<!-- add_forbidden_word.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>新增髒話</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forbidden_words_form.css') }}">
+</head>
+<body>
+
+  <h2>新增髒話</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <label for="word">髒話：</label>
+    <input type="text" name="word" id="word" required>
+    <button type="submit">新增</button>
+  </form>
+
+</body>
+</html>
