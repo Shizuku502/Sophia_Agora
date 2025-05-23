@@ -1,9 +1,4 @@
 # Sophia_Agora
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> a144f32 (新增 README.md，記錄專案資訊)
 
 Sophia_Agora 是一個基於 Flask 架構的論壇系統，提供以下功能：
 
@@ -54,7 +49,11 @@ Sophia_Agora/
 
 ```bash
 python run.py
-<<<<<<< HEAD
-=======
->>>>>>> d25dc01 (新增 README.md，記錄專案資訊)
->>>>>>> a144f32 (新增 README.md，記錄專案資訊)
+
+## 📚 開發日誌 Devlog
+
+這裡記錄我開發 Sophia_Agora 專案的學習歷程與挑戰。
+
+| 期數 | 標題 | 日期 |
+|------|------|------|
+| [#1](docs/devlog/01_start.md) | 起點與信念：打造 Sophia_Agora 的自學旅程 | 2025-05 |
