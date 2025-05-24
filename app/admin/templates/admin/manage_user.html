@@ -1,0 +1,31 @@
+<!-- admin/manage_user.html -->
+{% extends 'admin/base.html' %}
+{% block title %}使用者管理{% endblock %}
+{% block content %}
+<h2>使用者管理</h2>
+<a href="{{ url_for('admin_user.add_user') }}">
+  <button>➕ 新增使用者</button>
+</a>
+
+<table>
+    <thead>
+        <tr><th>ID</th><th>帳號</th><th>暱稱</th><th>角色</th><th>狀態</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.account_id }}</td>
+            <td>{{ user.display_name }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.status }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin_user.toggle_user_role', user_id=user.id) }}">
+                    <button type="submit">切換角色</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

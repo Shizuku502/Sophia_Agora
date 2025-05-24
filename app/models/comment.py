@@ -1,5 +1,5 @@
 from datetime import datetime
-from extensions import db
+from app.extensions import db
 
 class Comment(db.Model):
     __tablename__ = "comments"
@@ -16,4 +16,5 @@ class Comment(db.Model):
         cascade="all, delete-orphan",
         lazy='dynamic'
     )
+    user = db.relationship('User', backref='comments')
     reactions = db.relationship('Reaction', backref='comment', lazy=True)

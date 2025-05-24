@@ -1,9 +1,10 @@
 # 啟動應用
 
 from app import create_app
-from app.models import User, ForbiddenWord, Post, Comment, Reaction
+from app.models import User, Forbidden_Word, Post, Comment, Reaction
 
-app = create_app()
+app = create_app("app.config.DevelopmentConfig")
+print("Registered Blueprints:", app.blueprints.keys())
 
-if __name__ == '__main__':
-    app.run(debug = True)
+if __name__ == "__main__":
+    app.run(debug=True)

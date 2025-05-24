@@ -1,0 +1,46 @@
+/* static/css/dashboard_form.css */
+
+.admin-dashboard {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-dashboard h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.dashboard-card {
+    display: block;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    text-decoration: none;
+    color: #333;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.dashboard-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-card p {
+    font-size: 1rem;
+    color: #666;
+}

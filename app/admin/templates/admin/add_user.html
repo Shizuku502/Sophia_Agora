@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<a href="{{ url_for('admin_user.user_list') }}">← 返回使用者列表</a>
 <div class="form-container role-student" id="user-form">
   <h2>新增使用者</h2>
 
@@ -20,7 +21,7 @@
     {% endif %}
   {% endwith %}
 
-  <form method="POST">
+  <form method="POST" action="{{ url_for('admin_user.add_user') }}">
     <label>帳號：</label>
     <input type="text" name="account_id" id="account_id" required>
 

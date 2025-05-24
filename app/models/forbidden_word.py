@@ -1,6 +1,6 @@
-from extensions import db
+from app.extensions import db
 
-class ForbiddenWord(db.Model):
+class Forbidden_Word(db.Model):
     __tablename__ = "forbidden_words"
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(50), unique=True, nullable=False)

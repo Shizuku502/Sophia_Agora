@@ -1,0 +1,123 @@
+/* static/css/forum.css */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9fb;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #6c5ce7;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+h1, h2, h3 {
+  color: #2d3436;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+a {
+  color: #0984e3;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+form label {
+  font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #5a4dcf;
+}
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Sophia Agora Title Styling */
+.agora-title {
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 2rem 0 1rem;
+  color: #2d3436;
+}
+
+.agora-subtitle {
+  text-align: center;
+  color: #636e72;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* 管理員名稱樣式 */
+.admin-name {
+  color: red;
+  font-weight: bold;
+}
+
+.comments {
+  margin-top: 1rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+.comment {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f1f2f6;
+  border-radius: 4px;
+}

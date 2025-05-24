@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sophia Agora 論壇{% endblock %}</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forum_form.css') }}">
+    
+    <!-- JS (optional，如果你之後要加 forum.js 可取消註解) -->
+    {# <script src="{{ url_for('static', filename='js/forum.js') }}"></script> #}
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="agora-title">Sophia Agora</div>
+        <div class="agora-subtitle">思想的交匯之地</div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        &copy; 2025 Sophia Agora Forum. All rights reserved.
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

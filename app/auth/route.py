@@ -28,15 +28,17 @@ def login():
         if not user:
             print("查無此帳號")
             return render_template("auth/login.html", errorMsg="查無帳號")
-        if not check_password_hash(user.password, input_password):
+        
+        # ✅ 用模型方法檢查密碼
+        if not user.check_password(input_password):
             return render_template("auth/login.html", errorMsg="密碼錯誤")
 
-        # 更新最後登入時間並登入
+        # ✅ 更新登入時間並登入
         user.last_login = datetime.now()
         db.session.commit()
         login_user(user)
 
-        return redirect(url_for("forum.index"))  # 假設登入後導向論壇首頁
+        return redirect(url_for("main.homepage"))  # 假設登入後導向論壇首頁
 
     return render_template("auth/login.html")
 
