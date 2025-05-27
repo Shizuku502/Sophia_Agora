@@ -1,0 +1,27 @@
+<!--app/user/templates/user/edit_profile.html-->
+
+{% extends 'base.html' %}
+{% block title %}編輯個人資料{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+{% block content %}
+<div class="profile-container">
+    <h2>編輯個人資料</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nickname.label }}<br>
+            {{ form.nickname(size=40) }}
+        </p>
+        <p>
+            {{ form.avatar.label }}<br>
+            {{ form.avatar() }}
+        </p>
+        <p>
+        {{ form.remove_avatar() }} {{ form.remove_avatar.label }}
+        </p>
+        <p>{{ form.submit(class="profile-edit-button") }}</p>
+    </form>
+</div>
+{% endblock %}

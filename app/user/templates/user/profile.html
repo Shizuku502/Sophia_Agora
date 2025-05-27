@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ user.nickname }} 的個人主頁
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- 頭像 -->
+    <div class="profile-avatar">
+        <img src="{{ user.avatar_url }}" class="avatar-lg" alt="頭像">
+    </div>
+
+    <!-- 暱稱與編輯按鈕 -->
+    <div class="profile-name">{{ user.nickname }}</div>
+
+    {% if current_user.id == user.id %}
+        <a href="{{ url_for('user.edit_profile') }}" class="profile-edit-button">✏️ 編輯個人資料</a>
+    {% endif %}
+
+    <!-- 統計資訊 -->
+    <div class="profile-stats">
+        <div>貼文數：{{ posts | length }}</div>
+        <div>總讚數：{{ total_likes }}</div>
+    </div>
+
+    <!-- 貼文清單 -->
+    <div class="profile-posts">
+        <h3>最近的貼文</h3>
+        <ul>
+        {% for post in posts %}
+            <li><a href="{{ url_for('post.post_detail', post_id=post.id) }}">{{ post.title }}</a></li>
+        {% else %}
+            <li>這個使用者還沒有發表貼文。</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+</div>
+{% endblock %}

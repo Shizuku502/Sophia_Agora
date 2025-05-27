@@ -1,1 +1,49 @@
-<h1> Homepage </h1>
+{% extends "base.html" %}
+
+{% block title %}Sophia Agora - 首頁{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="hero">
+        <h1>Sophia Agora</h1>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+        <p class="subtitle">一個開放討論、分享知識與創意的論壇空間。</p>
+        {% if current_user.is_authenticated %}
+            <p>歡迎回來，{{ current_user.nickname }}！</p>
+            <a href="{{ url_for('auth.logout') }}" class="btn">登出</a>
+        {% else %}
+            <div class="auth-buttons">
+                <a href="{{ url_for('auth.login') }}" class="btn">登入</a>
+            </div>
+        {% endif %}
+    </header>
+
+    <nav class="main-nav">
+        <a href="{{ url_for('main.homepage') }}">首頁</a>
+        <a href="{{ url_for('forum.forum_home') }}">論壇</a>
+        <a href="{{ url_for('post.create_post') }}">發表文章</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('user.profile', user_id=current_user.id) }}">我的頁面</a>
+        {% endif %}
+    </nav>
+
+    <section class="section">
+        <h2>🔥 熱門文章</h2>
+        {% if posts %}
+            <ul class="post-list">
+                {% for post in posts %}
+                    <li class="post-preview">
+                        <a href="{{ url_for('forum.view_post', post_id=post.id) }}">
+                            <h3>{{ post.title }}</h3>
+                        </a>
+                        <p class="meta">作者：{{ post.author.nickname }} ・ 發布於 {{ post.timestamp|format_datetime('%Y-%m-%d %H:%M') }}</p>
+                        <p class="snippet">{{ post.content[:100] }}...</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>目前尚無熱門文章，成為第一位發文者吧！</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

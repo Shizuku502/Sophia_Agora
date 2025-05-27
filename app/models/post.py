@@ -1,3 +1,5 @@
+# .models/post.py
+
 from datetime import datetime
 from app.extensions import db
 from app.models.user import User  # ✅ 確保有這一行
@@ -13,4 +15,12 @@ class Post(db.Model):
     user = db.relationship('User', backref='posts')  # ✅ 加這一行
 
     comments = db.relationship('Comment', backref='post', cascade='all, delete-orphan', lazy=True)
-    reactions = db.relationship('Reaction', backref='post', cascade="all, delete-orphan" ,lazy=True)
+    reactions = db.relationship('Reaction', backref='post', cascade="all, delete-orphan" ,lazy="dynamic")
+
+    @property
+    def like_count(self):
+        return self.reactions.filter_by(type='like').count()
+
+    @property
+    def dislike_count(self):
+        return self.reactions.filter_by(type='dislike').count()

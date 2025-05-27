@@ -9,6 +9,10 @@
         <span>{{ post.created_at|utc_span }}</span>
     </p>
     <div class="post-content">{{ post.content|safe }}</div>
+    <div class="reaction-buttons" data-post-id="{{ post.id }}">
+        <button class="reaction-btn like" data-type="like">👍 <span class="like-count">{{ post.like_count }}</span></button>
+        <button class="reaction-btn dislike" data-type="dislike">👎 <span class="dislike-count">{{ post.dislike_count }}</span></button>
+    </div>
     <hr>
     <h3>留言</h3>
     {% if current_user.is_authenticated %}
@@ -26,6 +30,10 @@
         {% for comment in post.comments %}
             <div class="comment">
                 <p><strong>{{ comment.user.display_name }}</strong>：{{ comment.content }}</p>
+                <div class="reaction-buttons" data-comment-id="{{ comment.id }}">
+                    <button class="reaction-btn like" data-type="like">👍 <span class="like-count">{{ comment.like_count }}</span></button>
+                    <button class="reaction-btn dislike" data-type="dislike">👎 <span class="dislike-count">{{ comment.dislike_count }}</span></button>
+                </div>
                 <p class="meta">
                     <span>{{ comment.created_at|utc_span }}</span>
                     {% if current_user.is_authenticated and (current_user.id == comment.user_id or current_user.is_admin) %}

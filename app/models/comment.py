@@ -17,4 +17,12 @@ class Comment(db.Model):
         lazy='dynamic'
     )
     user = db.relationship('User', backref='comments')
-    reactions = db.relationship('Reaction', backref='comment', cascade='all, delete-orphan', lazy=True)
+    reactions = db.relationship('Reaction', backref='comment', cascade='all, delete-orphan', lazy="dynamic")
+    
+    @property
+    def like_count(self):
+        return self.reactions.filter_by(type='like').count()
+
+    @property
+    def dislike_count(self):
+        return self.reactions.filter_by(type='dislike').count()

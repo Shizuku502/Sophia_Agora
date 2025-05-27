@@ -1,5 +1,6 @@
 # app/models/user.py
 
+from flask import url_for
 from flask_login import UserMixin
 from datetime import datetime
 from app.extensions import db
@@ -19,6 +20,7 @@ class User(db.Model, UserMixin):
     nickname = db.Column(db.String(100), default="未設定", nullable=False)
     teacher_id = db.Column(db.String(10), default=None)
     student_id = db.Column(db.String(10), default=None)
+    avatar_filename = db.Column(db.String(100), default='default.jpg')
 
     def __repr__(self):
         return f'<User {self.account_id}, Role: {self.role}>'
@@ -39,4 +41,11 @@ class User(db.Model, UserMixin):
     @property
     def display_name(self):
         """回傳使用者暱稱，若無設定則回傳帳號"""
-        return self.nickname if self.nickname else self.account_id
+        return self.nickname if self.nickname.strip() else self.account_id
+
+    @property
+    def avatar_url(self):
+        if self.avatar_filename:
+            return url_for('static', filename=f'uploads/avatars/{self.avatar_filename}', _external=False)
+        else:
+            return url_for('static', filename='uploads/avatars/default.jpg', _external=False)
