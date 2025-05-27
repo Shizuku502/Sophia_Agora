@@ -10,7 +10,7 @@
 <ul>
     {% for word in words %}
     <li>
-        {{ word.text }}
+        {{ word.word }}
         <form method="POST" action="{{ url_for('admin_forbidden_word.delete_forbidden', word_id=word.id) }}">
             <button type="submit">刪除</button>
         </form>

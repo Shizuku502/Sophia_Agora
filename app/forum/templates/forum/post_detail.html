@@ -1,3 +1,4 @@
+<!-- forum/post_detail.html -->
 {% extends 'forum/base.html' %}
 {% block title %}{{ post.title }} - Sophia Agora{% endblock %}
 {% block content %}
@@ -5,7 +6,7 @@
     <h2>{{ post.title }}</h2>
     <p class="meta">
         由 <span class="author">{{ post.user.display_name }}</span> 發表於
-        <span class="utc-time" data-utc="{{ post.created_at.isoformat() }}Z">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        <span>{{ post.created_at|utc_span }}</span>
     </p>
     <div class="post-content">{{ post.content|safe }}</div>
     <hr>
@@ -26,7 +27,7 @@
             <div class="comment">
                 <p><strong>{{ comment.user.display_name }}</strong>：{{ comment.content }}</p>
                 <p class="meta">
-                    <span class="utc-time" data-utc="{{ comment.created_at.isoformat() }}Z">{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <span>{{ comment.created_at|utc_span }}</span>
                     {% if current_user.is_authenticated and (current_user.id == comment.user_id or current_user.is_admin) %}
                         <form method="POST" action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" class="inline-form">
                             <button type="submit" onclick="return confirm('確定要刪除此留言嗎？')">刪除</button>
@@ -39,4 +40,7 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
 {% endblock %}

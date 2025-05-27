@@ -4,6 +4,7 @@ from .auth import register_auth_blueprint
 from .admin import register_admin_blueprint
 from .forum import register_forum_blueprint
 from .main import register_main_blueprint
+from .utils import filters
 
 def create_app(config_class="app.config.DevelopmentConfig"):
     app = Flask(__name__, static_folder="static")
@@ -19,5 +20,10 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     register_admin_blueprint(app)
     register_forum_blueprint(app)
     register_main_blueprint(app)
+    
+    # 註冊自訂濾鏡
+    app.jinja_env.filters['format_datetime'] = filters.format_datetime
+    app.jinja_env.filters['censor_text'] = filters.censor_text
+    app.jinja_env.filters['utc_span'] = filters.utc_span
 
     return app

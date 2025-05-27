@@ -12,5 +12,5 @@ class Post(db.Model):
 
     user = db.relationship('User', backref='posts')  # ✅ 加這一行
 
-    comments = db.relationship('Comment', backref='post', lazy=True)
-    reactions = db.relationship('Reaction', backref='post', lazy=True)
+    comments = db.relationship('Comment', backref='post', cascade='all, delete-orphan', lazy=True)
+    reactions = db.relationship('Reaction', backref='post', cascade="all, delete-orphan" ,lazy=True)

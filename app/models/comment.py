@@ -17,4 +17,4 @@ class Comment(db.Model):
         lazy='dynamic'
     )
     user = db.relationship('User', backref='comments')
-    reactions = db.relationship('Reaction', backref='comment', lazy=True)
+    reactions = db.relationship('Reaction', backref='comment', cascade='all, delete-orphan', lazy=True)
