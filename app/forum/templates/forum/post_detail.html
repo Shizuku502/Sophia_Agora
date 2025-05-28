@@ -1,6 +1,10 @@
 <!-- forum/post_detail.html -->
-{% extends 'forum/base.html' %}
+{% extends 'base.html' %}
 {% block title %}{{ post.title }} - Sophia Agora{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reaction.css') }}">
+{% endblock %}
 {% block content %}
 <div class="container">
     <h2>{{ post.title }}</h2>
@@ -51,4 +55,5 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
+     <script src="{{ url_for('static', filename='js/reaction.js') }}"></script>
 {% endblock %}

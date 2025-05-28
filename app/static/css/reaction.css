@@ -10,6 +10,9 @@
     cursor: pointer;
     font-size: 1.1rem;
     transition: transform 0.2s, color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .reaction-btn:hover {
@@ -20,9 +23,17 @@
 .reaction-btn.active-like {
     color: #198754;  /* Bootstrap success */
     font-weight: bold;
+    transform: scale(1.15);
 }
 
 .reaction-btn.active-dislike {
     color: #dc3545;  /* Bootstrap danger */
     font-weight: bold;
+    transform: scale(1.15);
+}
+
+/* 處理中樣式 */
+.reaction-btn.loading {
+    opacity: 0.6;
+    pointer-events: none;
 }

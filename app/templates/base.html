@@ -1,27 +1,55 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Sophia Agora 論壇{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forum_form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reaction.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
     {% block head %}{% endblock %}
 </head>
 <body>
     <header>
-        <div class="logo">逢甲大學</div>
+        <div class="logo">Sophia Agora</div>
         <div class="nav">
             {% if current_user.is_authenticated %}
+                <!-- 🔔 通知鈴鐺下拉 -->
+                <div class="notif-dropdown-wrapper">
+                    <div class="nav-link notif-toggle" id="notif-bell">
+                        🔔
+                        <span class="badge bg-danger" id="notif-count" style="display: none;"></span>
+                    </div>
+                    <div class="notif-dropdown" id="notif-menu">
+                        <div id="notif-items" class="notif-items">
+                            <p class="text-muted text-center m-2">載入中...</p>
+                        </div>
+                        <div class="notif-footer text-center">
+                            <a href="{{ url_for('notification.view_notifications') }}" class="btn btn-sm btn-outline-primary">查看所有通知</a>
+                        </div>
+                    </div>
+                </div>
                 <a class="nav-link" href="{{ url_for('auth.logout') }}">登出</a>
                 {% if current_user.is_admin %}
                     <a class="nav-link" href="{{ url_for('admin_user.user_list') }}">使用者管理</a>
                 {% endif %}
+            {% else %}
+                <a class="nav-link" href="{{ url_for('auth.login') }}">登入</a>
             {% endif %}
         </div>
     </header>
 
-    <main>
+    <main class="container">
         {% block content %}{% endblock %}
     </main>
 
-    {% block scripts %}{% endblock %}
+    <footer>
+        &copy; 2025 Sophia Agora Forum. All rights reserved.
+    </footer>
+
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/time_converter.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    {% endblock %}
 </body>
 </html>

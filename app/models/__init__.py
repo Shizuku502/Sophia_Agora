@@ -6,3 +6,4 @@ from app.models.forbidden_word import Forbidden_Word
 from app.models.post import Post
 from app.models.comment import Comment
 from app.models.reaction import Reaction
+from app.models.notification import Notification

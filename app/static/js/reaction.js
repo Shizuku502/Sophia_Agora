@@ -1,3 +1,4 @@
+// static/js/reaction.js
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".reaction-btn").forEach(button => {
     button.addEventListener("click", async (e) => {
@@ -6,6 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const parent = btn.closest(".reaction-buttons");
       const postId = parent.dataset.postId || null;
       const commentId = parent.dataset.commentId || null;
+
+      const likeBtn = parent.querySelector(".reaction-btn.like");
+      const dislikeBtn = parent.querySelector(".reaction-btn.dislike");
+      const likeCountSpan = likeBtn.querySelector(".like-count");
+      const dislikeCountSpan = dislikeBtn.querySelector(".dislike-count");
 
       const response = await fetch("/reactions/add", {
         method: "POST",
@@ -22,9 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const result = await response.json();
 
-      if (result.status) {
-        // 刷新頁面數據或動態更新
-        window.location.reload();
+      if (["added", "updated", "removed"].includes(result.status)) {
+        likeCountSpan.textContent = result.like_count;
+        dislikeCountSpan.textContent = result.dislike_count;
+
+        likeBtn.classList.remove("active-like");
+        dislikeBtn.classList.remove("active-dislike");
+
+        if (result.status === "added" || result.status === "updated") {
+          if (type === "like") likeBtn.classList.add("active-like");
+          else dislikeBtn.classList.add("active-dislike");
+        }
       }
     });
   });

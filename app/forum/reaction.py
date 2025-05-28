@@ -1,6 +1,6 @@
 # app/forum/reaction.py
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, url_for
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models.reaction import Reaction
@@ -14,32 +14,63 @@ def add_reaction():
     comment_id = request.json.get("comment_id")
     reaction_type = request.json.get("type")
 
-    # 先查詢是否已存在此使用者的回應
+    from app.models.post import Post
+    from app.models.comment import Comment
+    from app.models.notification import Notification
+
+    is_post = post_id is not None
+    target = Post.query.get(post_id) if is_post else Comment.query.get(comment_id)
+    if not target:
+        return jsonify({"error": "找不到目標內容"}), 404
+
     existing = Reaction.query.filter_by(
         user_id=current_user.id,
-        post_id=post_id,
-        comment_id=comment_id
+        post_id=post_id if is_post else None,
+        comment_id=comment_id if not is_post else None
     ).first()
 
     if existing:
         if existing.type == reaction_type:
-            # 已經按過同一個反應，則取消
             db.session.delete(existing)
             db.session.commit()
-            return jsonify({"status": "removed"})
+            return jsonify({
+                "status": "removed",
+                "like_count": target.like_count,
+                "dislike_count": target.dislike_count
+            })
         else:
-            # 改變反應種類
             existing.type = reaction_type
             db.session.commit()
-            return jsonify({"status": "updated"})
-    else:
-        # 新增反應
-        reaction = Reaction(
+            return jsonify({
+                "status": "updated",
+                "like_count": target.like_count,
+                "dislike_count": target.dislike_count
+            })
+
+    # ➕ 新增反應 + 通知
+    reaction = Reaction(
+        type=reaction_type,
+        user_id=current_user.id,
+        post_id=post_id if is_post else None,
+        comment_id=comment_id if not is_post else None
+    )
+    db.session.add(reaction)
+    db.session.flush()
+
+    if target.user_id != current_user.id:
+        title = target.title if is_post else target.content[:20] + "..."
+        content_type = "文章" if is_post else "留言"
+        notification = Notification(
+            user_id=target.user_id,
             type=reaction_type,
-            user_id=current_user.id,
-            post_id=post_id,
-            comment_id=comment_id
+            content=f"{current_user.nickname} 對你的{content_type}做出了反應《{title}》",
+            link=url_for('post.post_detail', post_id=post_id if is_post else target.post_id)
         )
-        db.session.add(reaction)
-        db.session.commit()
-        return jsonify({"status": "added"})
+        db.session.add(notification)
+
+    db.session.commit()
+    return jsonify({
+        "status": "added",
+        "like_count": target.like_count,
+        "dislike_count": target.dislike_count
+    })
