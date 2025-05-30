@@ -98,7 +98,7 @@ def delete_notification(notification_id):
     return jsonify({"status": "deleted"})
 
 # 刪除全部通知
-@notification_bp.route("/clear-all")
+@notification_bp.route("/clear-all", methods = ["POST"])
 @login_required
 def clear_all():
     Notification.query.filter_by(user_id=current_user.id).delete()

@@ -1,10 +1,13 @@
 <!-- forum/post_detail.html -->
 {% extends 'base.html' %}
 {% block title %}{{ post.title }} - Sophia Agora{% endblock %}
+
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reaction.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_comment.css') }}">
 {% endblock %}
+
 {% block content %}
 <div class="container">
     <h2>{{ post.title }}</h2>
@@ -12,11 +15,20 @@
         由 <span class="author">{{ post.user.display_name }}</span> 發表於
         <span>{{ post.created_at|utc_span }}</span>
     </p>
+
     <div class="post-content">{{ post.content|safe }}</div>
-    <div class="reaction-buttons" data-post-id="{{ post.id }}">
-        <button class="reaction-btn like" data-type="like">👍 <span class="like-count">{{ post.like_count }}</span></button>
-        <button class="reaction-btn dislike" data-type="dislike">👎 <span class="dislike-count">{{ post.dislike_count }}</span></button>
+
+    <div class="post-reaction-bar" data-post-id="{{ post.id }}">
+        <div class="reaction-buttons" data-post-id="{{ post.id }}">
+            <button class="reaction-btn like me-2" data-type="like">
+                👍 <span class="like-count">{{ post.like_count }}</span>
+            </button>
+            <button class="reaction-btn dislike" data-type="dislike">
+                👎 <span class="dislike-count">{{ post.dislike_count }}</span>
+            </button>
+        </div>
     </div>
+
     <hr>
     <h3>留言</h3>
     {% if current_user.is_authenticated %}
@@ -28,6 +40,7 @@
     {% else %}
         <p><a href="{{ url_for('auth.login') }}">登入</a>後才能留言。</p>
     {% endif %}
+
     <hr>
     <h3>留言區</h3>
     <div class="comments">
@@ -41,8 +54,14 @@
                 <p class="meta">
                     <span>{{ comment.created_at|utc_span }}</span>
                     {% if current_user.is_authenticated and (current_user.id == comment.user_id or current_user.is_admin) %}
-                        <form method="POST" action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" class="inline-form">
-                            <button type="submit" onclick="return confirm('確定要刪除此留言嗎？')">刪除</button>
+                        <button class="btn btn-sm btn-outline-secondary me-2 edit-comment-btn"
+                                data-comment-id="{{ comment.id }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editCommentModal">
+                            ✏️ 編輯
+                        </button>
+                        <form method="POST" action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" class="inline-form d-inline">
+                            <button type="submit" onclick="return confirm('確定要刪除此留言嗎？')" class="btn btn-sm btn-outline-danger">🗑️ 刪除</button>
                         </form>
                     {% endif %}
                 </p>
@@ -52,8 +71,32 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- 編輯留言 Modal -->
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editCommentForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editCommentModalLabel">編輯留言</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="comment_id" id="edit-comment-id">
+          <textarea name="content" id="edit-comment-content" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">更新留言</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
+
 {% block scripts %}
     {{ super() }}
-     <script src="{{ url_for('static', filename='js/reaction.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/reaction.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_comment.js') }}"></script>
 {% endblock %}

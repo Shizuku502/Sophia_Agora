@@ -1,0 +1,20 @@
+<!--post/templates/post/edit_post.html-->
+
+{% extends 'base.html' %}
+{% block title %}編輯貼文 - Sophia Agora{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>編輯貼文</h2>
+    <form method="POST" action="{{ url_for('post.edit_post_submit', post_id=post.id) }}">
+
+        <label for="title">標題：</label>
+        <input type="text" id="title" name="title" value="{{ post.title }}" required>
+
+        <label for="content">內文：</label>
+        <textarea id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+
+        <button type="submit" class="btn">更新貼文</button>
+        <a href="{{ url_for('post.post_detail', post_id=post.id) }}" class="btn secondary">取消</a>
+    </form>
+</div>
+{% endblock %}
