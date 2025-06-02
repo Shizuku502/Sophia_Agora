@@ -5,12 +5,23 @@ from app.extensions import db
 
 class Reaction(db.Model):
     __tablename__ = "reactions"
+
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum('like', 'dislike', name='reaction_type'), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
-    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+
+    post_id = db.Column(
+        db.Integer,
+        db.ForeignKey('posts.id', ondelete="CASCADE"),  # ✅ 加這個
+        nullable=True
+    )
+
+    comment_id = db.Column(
+        db.Integer,
+        db.ForeignKey('comments.id', ondelete="CASCADE"),  # ✅ 也加
+        nullable=True
+    )
 
     __table_args__ = (
         db.CheckConstraint(

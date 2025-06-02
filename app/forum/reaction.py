@@ -10,6 +10,9 @@ reaction_bp = Blueprint("reaction", __name__, url_prefix="/reactions")
 @reaction_bp.route("/add", methods=["POST"])
 @login_required
 def add_reaction():
+    if not current_user.can_participate():
+        return jsonify({"error": "您的分數過低（須達 80 分），無法進行按讚或反對操作。"}), 403
+
     post_id = request.json.get("post_id")
     comment_id = request.json.get("comment_id")
     reaction_type = request.json.get("type")
@@ -47,7 +50,6 @@ def add_reaction():
                 "dislike_count": target.dislike_count
             })
 
-    # ➕ 新增反應 + 通知
     reaction = Reaction(
         type=reaction_type,
         user_id=current_user.id,

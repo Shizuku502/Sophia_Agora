@@ -21,6 +21,10 @@ class User(db.Model, UserMixin):
     teacher_id = db.Column(db.String(10), default=None)
     student_id = db.Column(db.String(10), default=None)
     avatar_filename = db.Column(db.String(100), default='default.jpg')
+    points = db.Column(db.Integer, nullable=False, default=100, server_default="100")
+    is_suspended = db.Column(db.Boolean, default=False)
+
+    notifications = db.relationship('Notification', back_populates='user', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.account_id}, Role: {self.role}>'
@@ -32,6 +36,12 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         """檢查密碼是否正確"""
         return check_password_hash(self.password_hash, password)
+
+    def deduct_points(self, amount):
+        """扣除使用者分數，不能低於 0 分"""
+        if self.points is None:
+            self.points = 100
+        self.points = max(0, self.points - amount)
 
     @property
     def is_admin(self):
@@ -49,3 +59,11 @@ class User(db.Model, UserMixin):
             return url_for('static', filename=f'uploads/avatars/{self.avatar_filename}', _external=False)
         else:
             return url_for('static', filename='uploads/avatars/default.jpg', _external=False)
+
+    def can_participate(self):
+        """判斷使用者是否有權限進行貼文、留言、按讚等操作"""
+        # 管理員永遠有權限
+        if self.is_admin:
+            return True
+        # 非管理員需判斷是否被停權與分數
+        return not self.is_suspended and self.points >= 80

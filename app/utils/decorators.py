@@ -1,7 +1,7 @@
 # utils/decorators.py
 
 from functools import wraps
-from flask import abort
+from flask import abort, redirect, url_for, flash
 from flask_login import current_user
 
 def require_role(*roles):
@@ -24,3 +24,13 @@ def admin_required(f):
 
 # 設定可匯出的函式
 __all__ = ["require_role", "admin_required"]
+
+# 使用者行為限制
+def check_user_score(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_authenticated and current_user.score < 80 and not current_user.is_admin:
+            flash("您的評分低於 80，無法使用此功能", "danger")
+            return redirect(url_for('main.index'))
+        return f(*args, **kwargs)
+    return decorated_function

@@ -6,6 +6,7 @@ from .forum import register_forum_blueprint
 from .main import register_main_blueprint
 from .user import register_user_blueprint
 from .notification import register_notification_blueprint
+from .report import register_report_blueprint
 from .utils import filters
 
 
@@ -17,7 +18,7 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import user, post, comment, reaction, forbidden_word, notification
+    from .models import user, post, comment, reaction, forbidden_word, notification, report
 
     register_auth_blueprint(app)
     register_admin_blueprint(app)
@@ -25,6 +26,8 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     register_main_blueprint(app)
     register_user_blueprint(app)
     register_notification_blueprint(app)
+    register_report_blueprint(app)
+    
     
     # 註冊自訂濾鏡
     app.jinja_env.filters['format_datetime'] = filters.format_datetime

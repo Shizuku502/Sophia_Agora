@@ -6,11 +6,13 @@ class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    type = db.Column(db.String(50), nullable=False)  # e.g., 'like', 'comment', 'system'
+    type = db.Column(db.String(50), nullable=False, default='system')  # e.g., 'like', 'comment', 'system'
     content = db.Column(db.Text, nullable=False)
     link = db.Column(db.String(255))  # Optional: where to go when clicked
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', back_populates='notifications')
 
     def to_dict(self):
         return {

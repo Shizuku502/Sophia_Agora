@@ -1,0 +1,145 @@
+<!-- app/admin/templates/admin/report_list.html -->
+
+{% extends 'admin/base.html' %}
+{% block title %}檢舉列表{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>檢舉列表</h2>
+
+  <!-- Toast -->
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div id="toast" class="toast text-white bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body" id="toast-body">操作結果</div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <form method="GET" class="mb-3" id="filter-form">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="only_pending" id="only_pending" value="1" {% if only_pending %}checked{% endif %} onchange="document.getElementById('filter-form').submit();">
+      <label class="form-check-label" for="only_pending">僅顯示待處理</label>
+    </div>
+  </form>
+
+  <!-- Table -->
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>檢舉時間</th>
+        <th>檢舉人</th>
+        <th>對象</th>
+        <th>內容預覽</th>
+        <th>理由</th>
+        <th>狀態</th>
+        <th>處理</th>
+        <th>被檢舉人</th>
+        <th>管理功能</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr id="report-row-{{ report.id }}">
+        <td>{{ report.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ report.reporter.nickname or report.reporter.username }}</td>
+        <td>
+          {% if report.reported_post_id %}
+            帖文 (#{{ report.reported_post_id }})
+          {% elif report.reported_comment_id %}
+            留言 (#{{ report.reported_comment_id }})
+          {% elif report.reported_user_id %}
+            使用者 (#{{ report.reported_user_id }})
+          {% endif %}
+        </td>
+        <td>
+          {% if report.reported_post_id %}
+            {{ report.reported_post.content[:30] ~ '...' if report.reported_post else '[已刪除]' }}
+          {% elif report.reported_comment_id %}
+            {{ report.reported_comment.content[:30] ~ '...' if report.reported_comment else '[已刪除]' }}
+          {% elif report.reported_user_id %}
+            {{ report.reported_user.nickname or report.reported_user.username if report.reported_user else '[已刪除]' }}
+          {% endif %}
+        </td>
+        <td>{{ report.reason }}</td>
+        <td>
+          {% if report.status == 'pending' %}
+            <span class="badge bg-warning text-dark">待處理</span>
+          {% elif report.status == 'approved' %}
+            <span class="badge bg-success">已扣分</span>
+          {% elif report.status == 'rejected' %}
+            <span class="badge bg-secondary">已忽略</span>
+          {% else %}
+            <span class="badge bg-info text-dark">{{ report.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if report.status == 'pending' %}
+            <button type="button" class="btn btn-sm btn-danger approve-btn" data-id="{{ report.id }}">扣分</button>
+            <button type="button" class="btn btn-sm btn-secondary reject-btn" data-id="{{ report.id }}">忽略</button>
+          {% else %}
+            處理人：{{ report.reviewer.nickname if report.reviewer else '未知' }}<br>
+            處理時間：{{ report.reviewed_at.strftime('%Y-%m-%d %H:%M') if report.reviewed_at else '' }}
+          {% endif %}
+        </td>
+        <td>
+          {% if report.reported_user %}
+            {{ report.reported_user.display_name }}<br>
+            <small class="text-muted">目前分數：{{ report.reported_user.points }}</small>
+          {% else %}
+            [使用者資料已刪除]
+          {% endif %}
+        </td>
+        <td class="d-flex flex-column gap-1">
+          {% if report.status == 'pending' %}
+            <button type="button" class="btn btn-sm btn-warning approve-btn" data-id="{{ report.id }}">標記為已處理並扣 5 分</button>
+            <button type="button" class="btn btn-sm btn-secondary reject-btn" data-id="{{ report.id }}">忽略檢舉</button>
+          {% else %}
+            <form method="POST" action="{{ url_for('admin_report.reject_report', report_id=report.id) }}">
+              <button type="submit" class="btn btn-sm btn-secondary">撤銷處理</button>
+            </form>
+          {% endif %}
+          {% if report.reported_user %}
+          <form method="POST" action="{{ url_for('admin_report.punish_user', user_id=report.reported_user.id) }}">
+            <input type="hidden" name="points" value="5">
+            <button type="submit" class="btn btn-sm btn-danger">懲處該用戶 5 分</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin_report.report_list', page=pagination.prev_num, only_pending=only_pending|int) }}">上一頁</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">上一頁</span></li>
+      {% endif %}
+
+      {% for p in pagination.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+        {% if p %}
+          {% if p == pagination.page %}
+            <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('admin_report.report_list', page=p, only_pending=only_pending|int) }}">{{ p }}</a></li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('admin_report.report_list', page=pagination.next_num, only_pending=only_pending|int) }}">下一頁</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">下一頁</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/report_list.js') }}"></script>
+{% endblock %}
+

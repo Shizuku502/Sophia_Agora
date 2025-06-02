@@ -1,0 +1,29 @@
+<!--app/report/templates/report/report_modal.html-->
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="reportForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportModalLabel">檢舉內容</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="reported_user_id" id="reportedUserId">
+          <input type="hidden" name="target_type" id="targetType">
+          <input type="hidden" name="target_id" id="targetId">
+
+          <div class="mb-3">
+            <label for="reason" class="form-label">檢舉理由</label>
+            <textarea class="form-control" id="reason" name="reason" rows="4" required></textarea>
+          </div>
+          <div id="reportFeedback" class="alert d-none" role="alert"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">送出檢舉</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

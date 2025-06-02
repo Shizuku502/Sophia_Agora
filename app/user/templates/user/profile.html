@@ -1,3 +1,5 @@
+<!--app/user/templates/user/profile.html-->
+
 {% extends 'base.html' %}
 
 {% block title %}
@@ -27,7 +29,14 @@
     <div class="profile-stats">
         <div>貼文數：{{ posts | length }}</div>
         <div>總讚數：{{ total_likes }}</div>
+        <div>帳號評分：{{ user.points }}</div>
     </div>
+
+    {% if user.points < 80 %}
+    <div class="alert alert-danger" style="margin-top: 1rem;">
+        ⚠️ 您的帳號評分為 {{ user.points }} 分，已達懲處門檻，互動功能可能受限。
+    </div>
+    {% endif %}
 
     <!-- 貼文清單 -->
     <div class="profile-posts">

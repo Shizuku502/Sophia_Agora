@@ -1,4 +1,5 @@
-<!-- forum/post_detail.html -->
+<!--app/forum/templates/forum/post_detail.html-->
+
 {% extends 'base.html' %}
 {% block title %}{{ post.title }} - Sophia Agora{% endblock %}
 
@@ -18,7 +19,8 @@
 
     <div class="post-content">{{ post.content|safe }}</div>
 
-    <div class="post-reaction-bar" data-post-id="{{ post.id }}">
+    <!-- 🆕 Post Reaction + Edit Buttons -->
+    <div class="post-reaction-bar d-flex justify-content-between align-items-center mt-3" data-post-id="{{ post.id }}">
         <div class="reaction-buttons" data-post-id="{{ post.id }}">
             <button class="reaction-btn like me-2" data-type="like">
                 👍 <span class="like-count">{{ post.like_count }}</span>
@@ -26,6 +28,28 @@
             <button class="reaction-btn dislike" data-type="dislike">
                 👎 <span class="dislike-count">{{ post.dislike_count }}</span>
             </button>
+        </div>
+        <div class="edit-buttons d-flex gap-2">
+            {% if current_user.is_authenticated and (current_user.id == post.user_id or current_user.is_admin) %}
+                <a href="{{ url_for('post.edit_post_form', post_id=post.id) }}" class="btn btn-outline-primary btn-sm">
+                    ✏️ 編輯
+                </a>
+                <form method="POST" action="{{ url_for('post.delete_post', post_id=post.id) }}" class="d-inline"
+                    onsubmit="return confirm('確定要刪除此文章嗎？這將一併刪除所有留言與歷史紀錄！');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        🗑️ 刪除
+                    </button>
+                </form>
+                <button class="btn btn-outline-secondary btn-sm view-post-history-btn" data-post-id="{{ post.id }}">
+                    🕘 歷史紀錄
+                </button>
+            {% endif %}
+            {% if current_user.is_authenticated and current_user.id != post.user_id %}
+                <button class="btn btn-outline-danger btn-sm"
+                        onclick="openReportModal('{{ post.user.id }}', 'post', '{{ post.id }}')">
+                    🚨 檢舉
+                </button>
+            {% endif %}
         </div>
     </div>
 
@@ -53,16 +77,28 @@
                 </div>
                 <p class="meta">
                     <span>{{ comment.created_at|utc_span }}</span>
-                    {% if current_user.is_authenticated and (current_user.id == comment.user_id or current_user.is_admin) %}
-                        <button class="btn btn-sm btn-outline-secondary me-2 edit-comment-btn"
-                                data-comment-id="{{ comment.id }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editCommentModal">
-                            ✏️ 編輯
-                        </button>
-                        <form method="POST" action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" class="inline-form d-inline">
-                            <button type="submit" onclick="return confirm('確定要刪除此留言嗎？')" class="btn btn-sm btn-outline-danger">🗑️ 刪除</button>
-                        </form>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.id == comment.user_id or current_user.is_admin %}
+                            <button class="btn btn-sm btn-outline-secondary me-2 edit-comment-btn"
+                                    data-comment-id="{{ comment.id }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editCommentModal">
+                                ✏️ 編輯
+                            </button>
+                            <form method="POST" action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" class="inline-form d-inline">
+                                <button type="submit" onclick="return confirm('確定要刪除此留言嗎？')" class="btn btn-sm btn-outline-danger">🗑️ 刪除</button>
+                            </form>
+                            <button class="btn btn-sm btn-outline-info view-comment-history-btn"
+                                    data-comment-id="{{ comment.id }}">
+                                🕓 歷史
+                            </button>
+                        {% endif %}
+                        {% if current_user.id != comment.user_id %}
+                            <button class="btn btn-sm btn-outline-danger"
+                                    onclick="openReportModal('{{ comment.user.id }}', 'comment', '{{ comment.id }}')">
+                                🚨 檢舉
+                            </button>
+                        {% endif %}
                     {% endif %}
                 </p>
             </div>
@@ -93,10 +129,29 @@
     </div>
   </div>
 </div>
+
+<!-- 檢舉 Modal -->
+{% include 'report/report_modal.html' %}
+
+<!-- Toast 提示 -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+  <div id="reportToast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ 檢舉成功！感謝你的回報，我們會儘速審查。
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<!-- 動態內容 -->
+<div id="dynamic-modal-container"></div>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/reaction.js') }}"></script>
     <script src="{{ url_for('static', filename='js/edit_comment.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_history.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/report_modal.js') }}"></script>
 {% endblock %}

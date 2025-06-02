@@ -7,3 +7,5 @@ from app.models.post import Post
 from app.models.comment import Comment
 from app.models.reaction import Reaction
 from app.models.notification import Notification
+from app.models.post_edit_history import Post_Edit_History
+from app.models.report import Report

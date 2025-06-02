@@ -1,10 +1,12 @@
 <!-- forum/index.html -->
 {% extends 'base.html' %}
 {% block title %}Sophia Agora（玄思廣場）{% endblock %}
+
 {% block content %}
 <header>Sophia Agora（玄思廣場）</header>
 <div class="container">
     <h2 class="agora-subtitle">思想交鋒與對話的所在</h2>
+
     <div class="top-bar">
         {% if current_user.is_authenticated %}
             <a href="{{ url_for('post.create_post') }}" class="btn">➕ 新增貼文</a>
@@ -12,9 +14,18 @@
             <a href="{{ url_for('auth.login') }}" class="btn">請先登入以發文</a>
         {% endif %}
     </div>
+
+    {% if current_user.is_authenticated and not current_user.can_participate() %}
+        <div class="alert alert-warning mt-3">
+            ⚠️ 您目前的積分低於 80，無法在論壇進行發文、留言與按讚互動。
+        </div>
+    {% endif %}
+
     {% for post in posts %}
         <div class="post">
-            <h3><a href="{{ url_for('post.post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+            <h3>
+                <a href="{{ url_for('post.post_detail', post_id=post.id) }}">{{ post.title }}</a>
+            </h3>
             <p class="meta">
                 由 
                 <span class="{% if post.user.is_admin %}admin-name{% endif %}">{{ post.user.display_name }}</span> 
@@ -22,6 +33,7 @@
                 <span>{{ post.created_at|utc_span }}</span>
             </p>
             <p>{{ post.content[:100] }}...</p>
+
             {% if current_user.is_authenticated and current_user.is_admin %}
                 <form method="POST" action="{{ url_for('admin_post.delete_post', post_id=post.id) }}" style="display:inline;">
                     <button type="submit" onclick="return confirm('確定要刪除這篇文章嗎？')">刪除</button>
@@ -33,6 +45,7 @@
     {% endfor %}
 </div>
 {% endblock %}
+
 {% block scripts %}
     {{ super() }}
 {% endblock %}

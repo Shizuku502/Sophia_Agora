@@ -1,0 +1,27 @@
+<!--app/forum/templates/forum/post_history.html-->
+
+<div class="modal fade" id="postHistoryModal" tabindex="-1" aria-labelledby="postHistoryLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content rounded-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="postHistoryLabel">文章編輯紀錄</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+      </div>
+      <div class="modal-body">
+        {% if history %}
+          <ul class="list-group">
+            {% for h in history %}
+              <li class="list-group-item">
+                <small class="text-muted">{{ h.edited_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                <h6>{{ h.original_title }}</h6>
+                <p>{{ h.original_content|safe }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">尚無編輯紀錄。</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

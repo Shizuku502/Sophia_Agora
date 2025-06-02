@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", async (e) => {
     const btn = e.target.closest(".reaction-btn");
-    if (!btn) return; // 不是按在 reaction 按鈕上
+    if (!btn) return;
 
     const type = btn.dataset.type;
     const parent = btn.closest(".reaction-buttons");
@@ -14,32 +14,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const likeCountSpan = likeBtn.querySelector(".like-count");
     const dislikeCountSpan = dislikeBtn.querySelector(".dislike-count");
 
-    const response = await fetch("/reactions/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrf_token")
-      },
-      body: JSON.stringify({
-        post_id: postId,
-        comment_id: commentId,
-        type: type
-      })
-    });
+    btn.disabled = true;
+    btn.classList.add("loading");
 
-    const result = await response.json();
+    try {
+      const response = await fetch("/reactions/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrf_token")
+        },
+        body: JSON.stringify({
+          post_id: postId,
+          comment_id: commentId,
+          type: type
+        })
+      });
 
-    if (["added", "updated", "removed"].includes(result.status)) {
-      likeCountSpan.textContent = result.like_count;
-      dislikeCountSpan.textContent = result.dislike_count;
+      const result = await response.json();
 
-      likeBtn.classList.remove("active-like");
-      dislikeBtn.classList.remove("active-dislike");
+      if (["added", "updated", "removed"].includes(result.status)) {
+        likeCountSpan.textContent = result.like_count;
+        dislikeCountSpan.textContent = result.dislike_count;
 
-      if (result.status === "added" || result.status === "updated") {
-        if (type === "like") likeBtn.classList.add("active-like");
-        else dislikeBtn.classList.add("active-dislike");
+        likeBtn.classList.remove("active-like");
+        dislikeBtn.classList.remove("active-dislike");
+
+        if (result.status === "added" || result.status === "updated") {
+          if (type === "like") likeBtn.classList.add("active-like");
+          else dislikeBtn.classList.add("active-dislike");
+        }
+
+        // 通知紅點更新，呼叫 notification.js 的方法 (window 共享)
+        if (typeof updateNotificationCount === "function") {
+          updateNotificationCount();
+        }
       }
+    } catch (error) {
+      console.error("Reaction error:", error);
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove("loading");
     }
   });
 });
