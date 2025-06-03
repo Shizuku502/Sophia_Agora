@@ -7,7 +7,7 @@
 {% block content %}
 <div class="container">
     <header class="hero">
-        <h1>Sophia Agora</h1>
+        <h1>Sophia Agora</a></h1>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
         <p class="subtitle">一個開放討論、分享知識與創意的論壇空間。</p>
         {% if current_user.is_authenticated %}
@@ -21,7 +21,7 @@
     </header>
 
     <nav class="main-nav">
-        <a href="{{ url_for('main.homepage') }}">首頁</a>
+        <a href="{{ url_for('teacher.teacher_list') }}">系所成員</a>
         <a href="{{ url_for('forum.forum_home') }}">論壇</a>
         <a href="{{ url_for('post.create_post') }}">發表文章</a>
         {% if current_user.is_authenticated %}

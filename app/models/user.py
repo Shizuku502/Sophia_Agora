@@ -15,6 +15,8 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.Enum('student', 'teacher', 'admin', name='user_roles'), nullable=False)
     status = db.Column(db.Enum('online', 'busy', 'offline', name='user_status'), default='offline')
+    email = db.Column(db.String(120), unique=True)
+    extension = db.Column(db.String(20))
     last_login = db.Column(db.DateTime, default=None)
     registered_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
     nickname = db.Column(db.String(100), default="未設定", nullable=False)
@@ -23,11 +25,12 @@ class User(db.Model, UserMixin):
     avatar_filename = db.Column(db.String(100), default='default.jpg')
     points = db.Column(db.Integer, nullable=False, default=100, server_default="100")
     is_suspended = db.Column(db.Boolean, default=False)
-
+    
+    
     notifications = db.relationship('Notification', back_populates='user', lazy='dynamic')
     teacher_papers = db.relationship('Teacher_Paper', backref='teacher', lazy='dynamic')
     teacher_experiences = db.relationship('Teacher_Experience', backref='teacher', lazy='dynamic')
-    teacher_expertises = db.relationship('Teacher_Expertise', backref='teacher', lazy='dynamic')
+    teacher_expertises = db.relationship('Teacher_Expertise', backref='teacher', lazy='select')
 
 
     def __repr__(self):

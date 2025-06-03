@@ -12,39 +12,41 @@
 </head>
 <body>
     <header>
-        <div class="logo">Sophia Agora</div>
-        <div class="nav">
-            {% if current_user.is_authenticated %}
-                <!-- 🔔 通知鈴鐺下拉 -->
-                <div class="notif-dropdown-wrapper">
-                    <div id="notif-bell">
-                        🔔
-                        <span id="notif-count">0</span> <!-- JS 控制顯示 -->
-                    </div>
-                    <div class="notif-dropdown" id="notif-menu">
-                        <div id="notif-items" class="notif-items">
-                            <p class="text-muted text-center m-2">載入中...</p>
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('main.homepage') }}" class="logo-link">Sophia Agora</a>
+            <div class="d-flex align-items-center gap-3">
+                {% if current_user.is_authenticated %}
+                    <!-- 🔔 通知鈴鐺下拉 -->
+                    <div class="notif-dropdown-wrapper position-relative">
+                        <div id="notif-bell" class="nav-link position-relative">
+                            🔔
+                            <span id="notif-count" class="badge">0</span>
                         </div>
-                        <div class="notif-footer text-center">
-                            <a href="{{ url_for('notification.view_notifications') }}" class="btn btn-sm btn-outline-primary">查看所有通知</a>
+                        <div class="notif-dropdown" id="notif-menu">
+                            <div id="notif-items" class="notif-items">
+                                <p class="text-muted text-center m-2">載入中...</p>
+                            </div>
+                            <div class="notif-footer text-center">
+                                <a href="{{ url_for('notification.view_notifications') }}" class="btn btn-sm btn-outline-primary">查看所有通知</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a class="nav-link" href="{{ url_for('auth.logout') }}">登出</a>
-                {% if current_user.is_admin %}
-                    <a class="nav-link" href="{{ url_for('admin_user.user_list') }}">使用者管理</a>
+                    <a class="nav-link text-white" href="{{ url_for('auth.logout') }}">登出</a>
+                    {% if current_user.is_admin %}
+                        <a class="nav-link text-white" href="{{ url_for('admin_user.user_list') }}">使用者管理</a>
+                    {% endif %}
+                {% else %}
+                    <a class="nav-link text-white" href="{{ url_for('auth.login') }}">登入</a>
                 {% endif %}
-            {% else %}
-                <a class="nav-link" href="{{ url_for('auth.login') }}">登入</a>
-            {% endif %}
+            </div>
         </div>
     </header>
 
-    <main class="container">
+    <main class="container mt-4">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
+    <footer class="text-center mt-5 py-3 text-muted">
         &copy; 2025 Sophia Agora Forum. All rights reserved.
     </footer>
 

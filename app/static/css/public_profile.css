@@ -1,0 +1,63 @@
+/* static/css/teacher_public_profile.css */
+
+/* 公用容器 */
+.profile-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: "Helvetica Neue", sans-serif;
+  color: #333;
+}
+
+/* 頭像與基本資訊區塊 */
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* 教師頭像樣式 */
+.profile-header img {
+  width: 140px;
+  height: auto;
+  border-radius: 8px; /* 輕微圓角，不會過度圓形 */
+  object-fit: contain;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 基本資訊（暱稱、email 等） */
+.profile-info h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+.profile-info p {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+/* 各區塊標題與內容 */
+.section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 22px;
+  color: #34495e;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.section-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.section-content li {
+  margin-bottom: 6px;
+}

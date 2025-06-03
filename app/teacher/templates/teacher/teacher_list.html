@@ -1,0 +1,39 @@
+<!-- app/templates/teacher/teacher_list.html -->
+{% extends "base.html" %}
+{% block title %}教師一覽{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher_list.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2 class="text-white text-center mt-4 mb-3">教師一覽</h2>
+<div class="wrap">
+  {% for teacher in teachers %}
+    <div class="card-link">
+      <a href="{{ url_for('teacher.public_profile', account_id=teacher.account_id) }}" class="avatar-link">
+        <img src="{{ url_for('static', filename='uploads/avatars/' + (teacher.avatar_filename or 'default.jpg')) }}" alt="teacher avatar" class="teacher-avatar">
+      </a>
+      <div class="txt">
+        <h2 class="teacher-name">{{ teacher.nickname }}</h2>
+        <p class="teacher-info">
+          <span class="label">Email：</span>
+          <span class="copy-text" data-copy="{{ teacher.email }}">{{ teacher.email }}</span><br>
+          {% if teacher.extension %}
+            <span class="label">分機：</span>
+            <span class="copy-text" data-copy="{{ teacher.extension }}">{{ teacher.extension }}</span><br>
+          {% endif %}
+          {% if teacher.teacher_expertises %}
+            <span><strong>研究專長：</strong>
+              {{ teacher.teacher_expertises[0].field if teacher.teacher_expertises|length > 0 else "未填寫" }}
+            </span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/teacher_list.js') }}" defer></script>
+{% endblock %}
+{% endblock %}

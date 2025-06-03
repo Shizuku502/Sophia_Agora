@@ -1,14 +1,15 @@
 # app/teacher/route.py
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models.teacher import Teacher_Paper, Teacher_Experience, Teacher_Expertise
 from app.utils.decorators import teacher_required
 import uuid
 import os
+import re
 from werkzeug.utils import secure_filename
-from flask import current_app
+
 
 teacher_bp = Blueprint(
     "teacher",
@@ -24,10 +25,16 @@ teacher_bp = Blueprint(
 def profile():
     if request.method == "POST":
         nickname = request.form.get("nickname", "").strip()
+        email = request.form.get("email", "").strip()
+        extension = request.form.get("extension", "").strip()
         avatar_file = request.files.get("avatar")
 
         if nickname:
             current_user.nickname = nickname
+        if email:
+            current_user.email = email
+        if extension:
+            current_user.extension = extension
 
         if avatar_file and avatar_file.filename != "":
             filename = secure_filename(avatar_file.filename)
@@ -42,7 +49,7 @@ def profile():
             os.makedirs(upload_path, exist_ok=True)
             file_path = os.path.join(upload_path, new_filename)
             avatar_file.save(file_path)
-            current_user.avatar_url = f"/static/uploads/avatars/{new_filename}"
+            current_user.avatar_filename = new_filename
 
         db.session.commit()
         flash("個人資料更新成功", "success")
@@ -53,7 +60,6 @@ def profile():
     experiences = Teacher_Experience.query.filter_by(teacher_id=teacher_id).all()
     expertises = Teacher_Expertise.query.filter_by(teacher_id=teacher_id).all()
 
-    # 🔢 統計資料計算
     from app.models.post import Post
     from app.models.comment import Comment
 
@@ -277,3 +283,17 @@ def delete_expertise(expertise_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": "刪除專長失敗"}), 500
+
+# 系所成員
+
+from app.models.user import User
+
+@teacher_bp.route('/teacher_list')
+def teacher_list():
+    teachers = User.query.filter_by(role='teacher').all()
+    return render_template('teacher/teacher_list.html', teachers=teachers)
+
+@teacher_bp.route('/public_profile/<account_id>')
+def public_profile(account_id):
+    teacher = User.query.filter_by(account_id=account_id, role='teacher').first_or_404()
+    return render_template('teacher/public_profile.html', teacher=teacher)
