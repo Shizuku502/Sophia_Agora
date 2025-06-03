@@ -1,0 +1,111 @@
+<!-- app/teacher/templates/teacher/profile.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}{{ user.nickname }} 的教師個人資料{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/teacher_profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- 👤 基本資訊 -->
+    <img src="{{ user.avatar_url }}" class="avatar-lg" alt="頭像">
+    <div class="profile-name">{{ user.nickname }}</div>
+    <div class="profile-id">帳號 ID：{{ user.account_id }}｜教師編號：{{ user.teacher_id }}</div>
+
+    <!-- 🧠 研究專長 -->
+    <div class="profile-section">
+        <h3>研究專長</h3>
+        <a href="{{ url_for('teacher.add_expertise') }}" class="btn">➕ 新增專長</a>
+        {% if expertises %}
+            <ul class="expertise-list">
+                {% for expertise in expertises %}
+                <li data-id="{{ expertise.id }}">
+                    <div class="expertise-item">
+                        <span class="field-text">{{ expertise.field }}</span>
+                        <input type="text" class="field-input" value="{{ expertise.field }}" style="display: none;">
+                        <button class="btn btn-sm btn-edit-expertise">編輯</button>
+                        <button class="btn btn-sm btn-save-expertise" style="display: none;">儲存</button>
+                        <button class="btn btn-sm btn-cancel-expertise" style="display: none;">取消</button>
+                        <button type="button" class="btn btn-sm btn-delete-expertise" data-expertise-id="{{ expertise.id }}">🗑 刪除</button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">尚未填寫研究專長。</p>
+        {% endif %}
+    </div>
+
+    <!-- 🎓 研究 / 論文 -->
+    <div class="profile-section research">
+        <h3>研究 / 論文</h3>
+        <a href="{{ url_for('teacher.add_paper') }}" class="btn">➕ 新增論文</a>
+        {% if papers %}
+            <ul>
+                {% for paper in papers %}
+                    <li>
+                        {{ paper.year }} - {{ paper.title }} ({{ paper.paper_type }})
+                        <a href="{{ url_for('teacher.edit_paper', paper_id=paper.id) }}" class="btn btn-sm btn-edit-paper">編輯</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">尚未填寫研究或論文資料。</p>
+        {% endif %}
+    </div>
+
+    <!-- 🧳 教學 / 工作經歷 -->
+    <div class="profile-section" id="experience-section">
+        <h3>經歷</h3>
+        <a href="{{ url_for('teacher.add_experience') }}" class="btn">➕ 新增經歷</a>
+        {% if experiences %}
+            <ul id="experience-list">
+                {% for experience in experiences %}
+                    <li data-id="{{ experience.id }}">
+                        <div class="experience-left">
+                            <span class="experience-badge">{{ experience.category }}</span>
+                            <span class="experience-description">{{ experience.description }}</span>
+                        </div>
+                        <button class="btn btn-sm btn-edit-experience">編輯</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">尚未填寫相關經歷。</p>
+        {% endif %}
+    </div>
+
+    <!-- 編輯經歷表單，預設隱藏 -->
+    <div id="edit-experience-form" style="display:none; margin-top: 1em;">
+        <h4>編輯經歷</h4>
+        <form id="experience-edit-form">
+            <input type="hidden" name="id" id="edit-exp-id" />
+            <label for="edit-category">類別</label>
+            <select name="category" id="edit-category" required>
+                <option value="">-- 請選擇類別 --</option>
+                <option value="校內">校內</option>
+                <option value="校外">校外</option>
+            </select>
+            <br/>
+            <label for="edit-description">經歷描述</label>
+            <textarea name="description" id="edit-description" rows="4" required></textarea>
+            <br/>
+            <button type="submit" class="btn">更新</button>
+            <button type="button" id="cancel-edit" class="btn btn-cancel">取消</button>
+        </form>
+    </div>
+
+</div>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_experience.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_expertise.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/delete_expertise.js') }}"></script>
+{% endblock %}
+{% endblock %}
+
+

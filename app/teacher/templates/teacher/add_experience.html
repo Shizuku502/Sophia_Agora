@@ -1,0 +1,26 @@
+<!--app/teacher/templates/teacher/add_experience.html-->
+
+{% extends "base.html" %}
+{% block title %}新增教學 / 工作經歷{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>新增教學 / 工作經歷</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="category">類別</label>
+            <select name="category" id="category" required>
+                <option value = "">-- 請選擇類別 --</option>
+                <option value = "校內">校內</option>
+                <option value = "校外">校外</option>
+            </select>    
+        </div>
+        <div class="form-group">
+            <label for="description">經歷描述 （例如： 單位 / 職稱）</label>
+            <textarea name="description" id="description" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn">提交</button>
+        <a href="{{ url_for('teacher.profile', user_id=current_user.id) }}" class="btn cancel">取消</a>
+    </form>
+</div>
+{% endblock %}

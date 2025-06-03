@@ -1,7 +1,9 @@
 # utils/decorators.py
 
+# utils/decorators.py
+
 from functools import wraps
-from flask import abort, redirect, url_for, flash
+from flask import abort
 from flask_login import current_user
 
 def require_role(*roles):
@@ -17,20 +19,20 @@ def require_role(*roles):
         return decorated_function
     return decorator
 
-# ✅ 新增 admin_required 裝飾器
+# ✅ 管理員限定
 def admin_required(f):
     """檢查使用者是否為管理員"""
-    return require_role("admin")(f)  # 直接使用 require_role 來限制管理員存取
+    return require_role("admin")(f)
+
+# ✅ 教師限定
+def teacher_required(f):
+    """檢查使用者是否為教師"""
+    return require_role("teacher")(f)
+
+# ✅ 你可以根據需要再加入 student_required
+def student_required(f):
+    """檢查使用者是否為學生"""
+    return require_role("student")(f)
 
 # 設定可匯出的函式
-__all__ = ["require_role", "admin_required"]
-
-# 使用者行為限制
-def check_user_score(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if current_user.is_authenticated and current_user.score < 80 and not current_user.is_admin:
-            flash("您的評分低於 80，無法使用此功能", "danger")
-            return redirect(url_for('main.index'))
-        return f(*args, **kwargs)
-    return decorated_function
+__all__ = ["require_role", "admin_required", "teacher_required", "student_required"]

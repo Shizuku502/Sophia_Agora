@@ -7,6 +7,7 @@ from .main import register_main_blueprint
 from .user import register_user_blueprint
 from .notification import register_notification_blueprint
 from .report import register_report_blueprint
+from .teacher import register_teacher_blueprint
 from .utils import filters
 
 
@@ -18,7 +19,7 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import user, post, comment, reaction, forbidden_word, notification, report
+    from .models import user, post, comment, reaction, forbidden_word, notification, report, teacher
 
     register_auth_blueprint(app)
     register_admin_blueprint(app)
@@ -27,6 +28,7 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     register_user_blueprint(app)
     register_notification_blueprint(app)
     register_report_blueprint(app)
+    register_teacher_blueprint(app)
     
     
     # 註冊自訂濾鏡

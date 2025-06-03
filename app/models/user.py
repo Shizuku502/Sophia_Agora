@@ -25,6 +25,10 @@ class User(db.Model, UserMixin):
     is_suspended = db.Column(db.Boolean, default=False)
 
     notifications = db.relationship('Notification', back_populates='user', lazy='dynamic')
+    teacher_papers = db.relationship('Teacher_Paper', backref='teacher', lazy='dynamic')
+    teacher_experiences = db.relationship('Teacher_Experience', backref='teacher', lazy='dynamic')
+    teacher_expertises = db.relationship('Teacher_Expertise', backref='teacher', lazy='dynamic')
+
 
     def __repr__(self):
         return f'<User {self.account_id}, Role: {self.role}>'

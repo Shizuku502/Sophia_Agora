@@ -1,0 +1,22 @@
+<!--app/teacher/templates/teacher/edit_paper.html-->
+
+{% extends "base.html" %}
+
+{% block title %}編輯論文{% endblock %}
+
+{% block content %}
+<h2>編輯論文</h2>
+<form method="POST">
+    <label>論文標題：</label>
+    <input type="text" name="title" value="{{ paper.title }}" required><br>
+
+    <label>發表年份：</label>
+    <input type="month" name="year" value="{{ paper.year }}" required><br>
+
+    <label>類型：</label>
+    <input type="text" name="paper_type" value="{{ paper.paper_type }}" required><br>
+
+    <button type="submit">更新</button>
+    <a href="{{ url_for('teacher.profile') }}" class="btn btn-cancel">取消</a>
+</form>
+{% endblock %}

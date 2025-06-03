@@ -1,0 +1,18 @@
+<!--app/teacher/templates/teacher/add_paper.html-->
+
+{% extends "base.html" %}
+
+{% block title %}新增論文{% endblock %}
+
+{% block content %}
+<h2>新增論文</h2>
+<form method="POST">
+    <label>論文標題：</label>
+    <input type="text" name="title" required><br>
+    <label>發表年份：</label>
+    <input type="month" name="year" required><br>
+    <label>類型：</label>
+    <input type="text" name="paper_type" required><br>
+    <button type="submit">新增</button>
+</form>
+{% endblock %}

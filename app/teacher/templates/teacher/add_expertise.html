@@ -1,0 +1,18 @@
+<!--app/teacher/templates/teacher/add_expertise.html-->
+
+{% extends "base.html" %}
+{% block title %}新增研究專長{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>新增研究專長</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="field">專長領域</label>
+            <input type="text" name="field" id="field" required>
+        </div>
+        <button type="submit" class="btn">提交</button>
+        <a href="{{ url_for('teacher.profile', user_id=current_user.id) }}" class="btn cancel">取消</a>
+    </form>
+</div>
+{% endblock %}
