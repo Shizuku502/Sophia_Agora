@@ -1,3 +1,5 @@
+# .utils/image.py
+
 from PIL import Image
 
 def compress_and_save_image(image_file, save_path, max_size=(500, 500), quality=85):

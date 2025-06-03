@@ -1,11 +1,14 @@
 # app/teacher/route.py
 
-from flask import Blueprint, render_template, request ,redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models.teacher import Teacher_Paper, Teacher_Experience, Teacher_Expertise
 from app.utils.decorators import teacher_required
 import uuid
+import os
+from werkzeug.utils import secure_filename
+from flask import current_app
 
 teacher_bp = Blueprint(
     "teacher",
@@ -15,23 +18,60 @@ teacher_bp = Blueprint(
 )
 
 # 教師個人學經歷頁面
-@teacher_bp.route("/profile")
+@teacher_bp.route("/profile", methods=["GET", "POST"])
 @login_required
 @teacher_required
 def profile():
-    # 根據登入的教師 ID 查詢資料
-    teacher_id = current_user.id  # 使用正確型別的主鍵
+    if request.method == "POST":
+        nickname = request.form.get("nickname", "").strip()
+        avatar_file = request.files.get("avatar")
+
+        if nickname:
+            current_user.nickname = nickname
+
+        if avatar_file and avatar_file.filename != "":
+            filename = secure_filename(avatar_file.filename)
+            allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+            ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+            if ext not in allowed_extensions:
+                flash("請上傳 png, jpg, jpeg, gif 格式的圖片", "error")
+                return redirect(url_for("teacher.profile"))
+            
+            new_filename = f"avatar_{current_user.id}.{ext}"
+            upload_path = os.path.join(current_app.root_path, "static", "uploads", "avatars")
+            os.makedirs(upload_path, exist_ok=True)
+            file_path = os.path.join(upload_path, new_filename)
+            avatar_file.save(file_path)
+            current_user.avatar_url = f"/static/uploads/avatars/{new_filename}"
+
+        db.session.commit()
+        flash("個人資料更新成功", "success")
+        return redirect(url_for("teacher.profile"))
+
+    teacher_id = current_user.id
     papers = Teacher_Paper.query.filter_by(teacher_id=teacher_id).all()
     experiences = Teacher_Experience.query.filter_by(teacher_id=teacher_id).all()
     expertises = Teacher_Expertise.query.filter_by(teacher_id=teacher_id).all()
+
+    # 🔢 統計資料計算
+    from app.models.post import Post
+    from app.models.comment import Comment
+
+    posts = Post.query.filter_by(user_id=teacher_id).all()
+    comments = Comment.query.filter_by(user_id=teacher_id).all()
+    total_likes = sum(post.like_count for post in posts)
 
     return render_template(
         "teacher/profile.html",
         user=current_user,
         papers=papers,
         experiences=experiences,
-        expertises=expertises
+        expertises=expertises,
+        posts=posts,
+        comments=comments,
+        total_likes=total_likes
     )
+
 
 # 新增論文    
 @teacher_bp.route("/papers/add", methods=["GET", "POST"])
@@ -91,6 +131,18 @@ def edit_paper(paper_id):
     # GET 請求時，帶入論文資料到表單
     return render_template("teacher/edit_paper.html", paper=paper)
 
+# 刪除論文
+@teacher_bp.route("/papers/delete/<paper_id>", methods=["POST"])
+@login_required
+@teacher_required
+def delete_paper(paper_id):
+    paper = Teacher_Paper.query.get(paper_id)
+    if paper is None:
+        return jsonify(success=False, message="找不到貼文"), 404
+
+    db.session.delete(paper)
+    db.session.commit()
+    return jsonify(success=True)
 
 # 新增經歷
 @teacher_bp.route("/experiences/add", methods=["GET", "POST"])
@@ -144,6 +196,23 @@ def edit_experience(exp_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "error": "資料庫更新失敗"}), 500
+    
+# 刪除經歷
+@teacher_bp.route("/experiences/delete/<string:exp_id>", methods=["POST"])
+@login_required
+@teacher_required
+def delete_experience(exp_id):
+    experience = Teacher_Experience.query.filter_by(id=exp_id, teacher_id=current_user.id).first()
+    if not experience:
+        return jsonify({"success": False, "message": "找不到該經歷"}), 404
+
+    try:
+        db.session.delete(experience)
+        db.session.commit()
+        return jsonify({"success": True, "message": "經歷刪除成功"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": "刪除經歷失敗"}), 500
 
 # 新增專長
 @teacher_bp.route("/expertises/add", methods=["GET", "POST"])

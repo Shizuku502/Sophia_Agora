@@ -12,10 +12,41 @@
 <div class="profile-container">
 
     <!-- 👤 基本資訊 -->
-    <img src="{{ user.avatar_url }}" class="avatar-lg" alt="頭像">
-    <div class="profile-name">{{ user.nickname }}</div>
-    <div class="profile-id">帳號 ID：{{ user.account_id }}｜教師編號：{{ user.teacher_id }}</div>
+    <form method="POST" enctype="multipart/form-data" id="profile-form">
+        <div class="avatar-section">
+            <img src="{{ user.avatar_url or url_for('static', filename='images/default_avatar.png') }}" class="avatar-lg" alt="頭像">
+            <br/>
+            <label for="avatar">更換頭像：</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*">
+        </div>
 
+        <div class="profile-name">
+            <label for="nickname">暱稱：</label>
+            <input type="text" id="nickname" name="nickname" value="{{ user.nickname }}" required>
+        </div>
+
+        <div class="profile-id">帳號 ID：{{ user.account_id }}｜教師編號：{{ user.teacher_id }}</div>
+
+        <button type="submit" class="btn">更新個人資料</button>
+    </form>
+
+    <!-- 📊 統計資訊 -->
+    <div class="profile-section">
+        <h3>統計資訊</h3>
+        <ul class="stats-list">
+            <li>文章數：<strong>{{ posts | length }}</strong></li>
+            <li>留言數：<strong>{{ comments | length }}</strong></li>
+            <li>獲得總讚數：<strong>{{ total_likes }}</strong></li>
+            <li>聲望分數：<strong>{{ user.points }}</strong></li>
+        </ul>
+    </div>
+
+    {% if user.points < 80 %}
+    <div class="alert alert-danger" style="margin-top: 1rem;">
+        ⚠️ 您的帳號評分為 {{ user.points }} 分，已達懲處門檻，互動功能可能受限。
+    </div>
+    {% endif %}
+    
     <!-- 🧠 研究專長 -->
     <div class="profile-section">
         <h3>研究專長</h3>
@@ -45,11 +76,12 @@
         <h3>研究 / 論文</h3>
         <a href="{{ url_for('teacher.add_paper') }}" class="btn">➕ 新增論文</a>
         {% if papers %}
-            <ul>
+            <ul class="paper-list">
                 {% for paper in papers %}
                     <li>
                         {{ paper.year }} - {{ paper.title }} ({{ paper.paper_type }})
                         <a href="{{ url_for('teacher.edit_paper', paper_id=paper.id) }}" class="btn btn-sm btn-edit-paper">編輯</a>
+                        <button type="button" class="btn btn-sm btn-delete-paper" data-paper-id="{{ paper.id }}">🗑 刪除</button>
                     </li>
                 {% endfor %}
             </ul>
@@ -71,6 +103,7 @@
                             <span class="experience-description">{{ experience.description }}</span>
                         </div>
                         <button class="btn btn-sm btn-edit-experience">編輯</button>
+                        <button class="btn-delete-experience" data-experience-id="{{ experience.id }}">刪除</button>
                     </li>
                 {% endfor %}
             </ul>
@@ -100,12 +133,14 @@
     </div>
 
 </div>
+
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_teacher_profile.js') }}"></script>
     <script src="{{ url_for('static', filename='js/edit_experience.js') }}"></script>
     <script src="{{ url_for('static', filename='js/edit_expertise.js') }}"></script>
     <script src="{{ url_for('static', filename='js/delete_expertise.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/delete_paper.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/delete_experience.js') }}"></script>
 {% endblock %}
 {% endblock %}
-
-
