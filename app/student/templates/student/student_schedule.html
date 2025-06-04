@@ -1,0 +1,129 @@
+<!--app/student/templates/student/student_schedule.html-->
+
+{% extends 'base.html' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student_schedule.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="schedule-container">
+    <h2 class="text-center mb-4">我的個人課表</h2>
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addScheduleModal">新增課程</button>
+
+    <table id="schedule-table" class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th class="align-middle">節次 / 星期</th>
+                {% set weekdays = ['日', '一', '二', '三', '四', '五', '六'] %}
+                {% for wd in weekdays %}
+                <th>星期{{ wd }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody id="schedule-body">
+            <!-- JS Dynamic Rows -->
+        </tbody>
+    </table>
+</div>
+
+<!-- 新增課程 Modal -->
+<div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="add-schedule-form" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addScheduleModalLabel">新增課程</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="weekday-select" class="form-label">星期</label>
+          <select id="weekday-select" name="weekday" class="form-select" required>
+              <option value="" disabled selected>請選擇星期</option>
+              {% for i in range(7) %}<option value="{{ i }}">星期{{ weekdays[i] }}</option>{% endfor %}
+          </select>
+        </div>
+        <div class="mb-3" id="period-checkboxes">
+          <label class="form-label">節次與時間</label>
+          <div>
+            {% for p in range(1, 15) %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="period{{p}}" name="periods" value="{{p}}">
+                <label class="form-check-label" for="period{{p}}">
+                  {{p}} 節 ({{ '%02d' % (8 + (p-1)) }}:10 ~ {{ '%02d' % (8 + (p-1)) }}:59)
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="course-name-input" class="form-label">課程名稱</label>
+          <input type="text" id="course-name-input" name="course_name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="location-input" class="form-label">地點</label>
+          <input type="text" id="location-input" name="location" class="form-control" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">新增課程</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 編輯／刪除 Modal -->
+<div class="modal fade" id="editScheduleModal" tabindex="-1" aria-labelledby="editScheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="edit-schedule-form" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editScheduleModalLabel">編輯課程</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-schedule-id">
+        
+        <div class="mb-3">
+          <label for="edit-weekday-select" class="form-label">星期</label>
+          <select id="edit-weekday-select" class="form-select" required>
+            {% for i in range(7) %}<option value="{{ i }}">星期{{ weekdays[i] }}</option>{% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="edit-period-select" class="form-label">節次</label>
+          <select id="edit-period-select" class="form-select" required>
+            {% for p in range(1, 15) %}
+              <option value="{{ p }}">{{ p }} 節 ({{ '%02d' % (8 + (p-1)) }}:10 ~ {{ '%02d' % (8 + (p-1)) }}:59)</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="edit-course-name-input" class="form-label">課程名稱</label>
+          <input type="text" id="edit-course-name-input" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="edit-location-input" class="form-label">地點</label>
+          <input type="text" id="edit-location-input" class="form-control" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger me-auto" id="delete-schedule-btn">刪除</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">儲存變更</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/student_schedule.js') }}"></script>
+{% endblock %}

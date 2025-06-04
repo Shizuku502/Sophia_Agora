@@ -10,3 +10,7 @@ from app.models.notification import Notification
 from app.models.post_edit_history import Post_Edit_History
 from app.models.report import Report
 from app.models.teacher import Teacher_Paper, Teacher_Experience, Teacher_Expertise
+from app.models.teacher_available_schedule import Teacher_Available_Schedule
+from app.models.teacher_schedule import Teacher_Schedule
+from app.models.student_schedule import Student_Schedule 
+from app.models.appointment import Appointment
