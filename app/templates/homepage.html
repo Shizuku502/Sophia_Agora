@@ -27,9 +27,10 @@
         {% if current_user.is_authenticated %}
             {% if current_user.role == 'teacher' %}
                 <a href="{{ url_for('teacher.profile') }}">我的頁面</a>
+                <a href="{{ url_for('teacher_schedule.teacher_schedule_page') }}">📘 我的課時表</a>
             {% elif current_user.role == 'student' %}
                 <a href="{{ url_for('user.profile', user_id=current_user.id) }}">我的頁面</a>
-                <a href="{{ url_for('student_schedule.schedule_page') }}">📘 我的課時表</a>
+                <a href="{{ url_for('student_schedule.schedule_page') }}">📘 我的課表</a>
             {% endif %}
         {% endif %}
     </nav>
