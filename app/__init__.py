@@ -9,6 +9,7 @@ from .notification import register_notification_blueprint
 from .report import register_report_blueprint
 from .teacher import register_teacher_blueprint, register_teacher_schedule_blueprint
 from .student import register_student_schedule_blueprint
+from .appointment import register_appointment_blueprint
 from .utils import filters
 
 
@@ -20,7 +21,7 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
-    from .models import user, post, comment, reaction, forbidden_word, notification, report, teacher, student_schedule, teacher_schedule
+    from .models import user, post, comment, reaction, forbidden_word, notification, report, teacher, student_schedule, teacher_schedule, appointment
 
     register_auth_blueprint(app)
     register_admin_blueprint(app)
@@ -32,6 +33,7 @@ def create_app(config_class="app.config.DevelopmentConfig"):
     register_teacher_blueprint(app)
     register_student_schedule_blueprint(app)
     register_teacher_schedule_blueprint(app)
+    register_appointment_blueprint(app)
     
     # 註冊自訂濾鏡
     app.jinja_env.filters['format_datetime'] = filters.format_datetime

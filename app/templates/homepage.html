@@ -7,7 +7,7 @@
 {% block content %}
 <div class="container">
     <header class="hero">
-        <h1>Sophia Agora</a></h1>
+        <h1>Sophia Agora</h1>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
         <p class="subtitle">一個開放討論、分享知識與創意的論壇空間。</p>
         {% if current_user.is_authenticated %}
@@ -28,6 +28,7 @@
             {% if current_user.role == 'teacher' %}
                 <a href="{{ url_for('teacher.profile') }}">我的頁面</a>
                 <a href="{{ url_for('teacher_schedule.teacher_schedule_page') }}">📘 我的課時表</a>
+                <a href="{{ url_for('teacher.teacher_available_slots_page') }}">🕓 可預約空堂設定</a>
             {% elif current_user.role == 'student' %}
                 <a href="{{ url_for('user.profile', user_id=current_user.id) }}">我的頁面</a>
                 <a href="{{ url_for('student_schedule.schedule_page') }}">📘 我的課表</a>

@@ -301,3 +301,11 @@ def public_profile(account_id):
         Teacher_Schedule.weekday, Teacher_Schedule.start_time
     ).all()
     return render_template('teacher/public_profile.html', teacher=teacher, schedules=schedules)
+
+# 可預約空堂
+
+@teacher_bp.route('/available_slots')
+@login_required
+@teacher_required
+def teacher_available_slots_page():
+    return render_template('teacher/available_slots.html')
