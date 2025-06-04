@@ -7,9 +7,7 @@ from app.models.teacher import Teacher_Paper, Teacher_Experience, Teacher_Expert
 from app.utils.decorators import teacher_required
 import uuid
 import os
-import re
 from werkzeug.utils import secure_filename
-
 
 teacher_bp = Blueprint(
     "teacher",
@@ -284,8 +282,7 @@ def delete_expertise(expertise_id):
         db.session.rollback()
         return jsonify({"success": False, "message": "刪除專長失敗"}), 500
 
-# 系所成員
-
+# 系所成員清單
 from app.models.user import User
 from app.models.teacher_schedule import Teacher_Schedule
 
@@ -302,8 +299,7 @@ def public_profile(account_id):
     ).all()
     return render_template('teacher/public_profile.html', teacher=teacher, schedules=schedules)
 
-# 可預約空堂
-
+# 教師標示可預約空堂頁面
 @teacher_bp.route('/available_slots')
 @login_required
 @teacher_required

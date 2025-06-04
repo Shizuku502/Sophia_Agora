@@ -1,0 +1,47 @@
+/* app/static/css/student_appointment.css */
+
+body {
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    color: #333;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+    box-shadow: 0 0 5px #ccc;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+.cancel-btn {
+    background-color: #e74c3c;
+    border: none;
+    color: white;
+    padding: 5px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
+}
+
+.message {
+    margin: 10px 0;
+    color: #d9534f;
+}

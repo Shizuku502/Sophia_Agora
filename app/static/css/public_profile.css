@@ -1,6 +1,7 @@
 /* static/css/teacher_public_profile.css */
 
-/* 公用容器 */
+/* static/css/public_profile.css */
+
 .profile-container {
   max-width: 800px;
   margin: 40px auto;
@@ -9,7 +10,6 @@
   color: #333;
 }
 
-/* 頭像與基本資訊區塊 */
 .profile-header {
   display: flex;
   align-items: flex-start;
@@ -17,18 +17,16 @@
   margin-bottom: 30px;
 }
 
-/* 教師頭像樣式 */
 .profile-header img {
   width: 140px;
   height: auto;
-  border-radius: 8px; /* 輕微圓角，不會過度圓形 */
+  border-radius: 8px;
   object-fit: contain;
   background-color: #f9f9f9;
   border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* 基本資訊（暱稱、email 等） */
 .profile-info h1 {
   margin: 0 0 10px;
   font-size: 28px;
@@ -40,7 +38,6 @@
   font-size: 16px;
 }
 
-/* 各區塊標題與內容 */
 .section {
   margin-bottom: 30px;
 }
@@ -62,19 +59,93 @@
   margin-bottom: 6px;
 }
 
-/* 新增課表樣式 */
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
 }
+
 .schedule-table th,
 .schedule-table td {
   border: 1px solid #ccc;
   padding: 0.5rem 1rem;
   text-align: center;
 }
+
 .schedule-table th {
   background-color: #f5f5f5;
   font-weight: bold;
+}
+
+/* 可預約時間按鈕 */
+.available-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slot-button {
+  padding: 8px 12px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.slot-button:hover {
+  background-color: #2980b9;
+}
+
+/* Modal 樣式 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#appointment-reason {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#submit-appointment {
+  margin-top: 12px;
+  background-color: #27ae60;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#submit-appointment:hover {
+  background-color: #219150;
 }

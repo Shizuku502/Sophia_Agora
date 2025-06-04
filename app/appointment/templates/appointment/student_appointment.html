@@ -1,0 +1,33 @@
+<!--app/appointment/templates/appointment/student_appointment.html-->
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <title>我的預約列表</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/student_appointment.css') }}">
+</head>
+<body>
+    <h1>我的預約列表</h1>
+
+    <div id="message" class="message"></div>
+
+    <table id="appointment-table">
+        <thead>
+            <tr>
+                <th>教師</th>
+                <th>日期</th>
+                <th>時間</th>
+                <th>狀態</th>
+                <th>備註</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JS 動態生成 -->
+        </tbody>
+    </table>
+
+    <script src="{{ url_for('static', filename='js/student_appointment.js') }}"></script>
+</body>
+</html>

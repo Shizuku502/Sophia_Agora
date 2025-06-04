@@ -1,14 +1,16 @@
-<!--app/teacher/templates/teacher/public_profile.html-->
+<!-- app/teacher/templates/teacher/public_profile.html -->
 
 {% extends "base.html" %}
 {% block title %}{{ teacher.nickname }} 的教師介紹{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/public_profile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/public_profile.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="profile-container">
+  <!-- 教師個人資訊區域 -->
   <div class="profile-header">
     <img src="{{ url_for('static', filename='uploads/avatars/' + (teacher.avatar_filename or 'default.jpg')) }}"
          alt="教師頭像">
@@ -21,6 +23,7 @@
     </div>
   </div>
 
+  <!-- 專長、論文、經歷 -->
   {% if teacher.teacher_expertises %}
     <div class="section">
       <h2 class="section-title">研究專長</h2>
@@ -87,6 +90,29 @@
     </table>
   </div>
   {% endif %}
-</div>
-{% endblock %}
 
+  <!-- 可預約時間區 -->
+  <div class="section">
+    <h2 class="section-title">可預約時間</h2>
+    <div id="available-slots" class="available-slots">
+      <!-- JavaScript 會動態插入資料 -->
+    </div>
+  </div>
+</div>
+
+<!-- 預約 Modal -->
+<div id="appointment-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h3>預約說明</h3>
+    <p id="selected-slot-info"></p>
+    <textarea id="appointment-reason" placeholder="請輸入預約動機..." rows="4"></textarea>
+    <button id="submit-appointment">送出預約申請</button>
+  </div>
+</div>
+
+<script>
+  const teacherId = {{ teacher.id }};
+</script>
+<script src="{{ url_for('static', filename='js/add_appointment.js') }}"></script>
+{% endblock %}
