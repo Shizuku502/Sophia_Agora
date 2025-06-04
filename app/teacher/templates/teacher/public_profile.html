@@ -59,5 +59,34 @@
       </div>
     </div>
   {% endif %}
+
+  {% set weekday_map = {0:'日', 1:'一', 2:'二', 3:'三', 4:'四', 5:'五', 6:'六'} %}
+
+  {% if schedules %}
+  <div class="section">
+    <h2 class="section-title">教師課表</h2>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>星期</th>
+          <th>時間</th>
+          <th>課程名稱</th>
+          <th>地點</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in schedules %}
+        <tr>
+          <td>{{ weekday_map.get(s.weekday, '未知') }}</td>
+          <td>{{ s.start_time.strftime('%H:%M') }} - {{ s.end_time.strftime('%H:%M') }}</td>
+          <td>{{ s.course_name }}</td>
+          <td>{{ s.location }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
+

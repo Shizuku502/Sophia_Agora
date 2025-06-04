@@ -287,6 +287,7 @@ def delete_expertise(expertise_id):
 # 系所成員
 
 from app.models.user import User
+from app.models.teacher_schedule import Teacher_Schedule
 
 @teacher_bp.route('/teacher_list')
 def teacher_list():
@@ -296,4 +297,7 @@ def teacher_list():
 @teacher_bp.route('/public_profile/<account_id>')
 def public_profile(account_id):
     teacher = User.query.filter_by(account_id=account_id, role='teacher').first_or_404()
-    return render_template('teacher/public_profile.html', teacher=teacher)
+    schedules = Teacher_Schedule.query.filter_by(teacher_id=teacher.id).order_by(
+        Teacher_Schedule.weekday, Teacher_Schedule.start_time
+    ).all()
+    return render_template('teacher/public_profile.html', teacher=teacher, schedules=schedules)
