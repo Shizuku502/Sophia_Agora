@@ -2,46 +2,189 @@
 
 body {
     font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-    padding: 20px;
-    background-color: #f9f9f9;
-}
-
-h1 {
+    padding: 40px;
+    background-color: #f3f4f6;
     color: #333;
 }
 
+h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #222;
+}
+
 table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
     background: white;
-    box-shadow: 0 0 5px #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 14px 16px;
     text-align: center;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    white-space: nowrap; /* 防止換行 */
 }
 
 th {
-    background-color: #f0f0f0;
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #555;
+}
+
+td {
+    vertical-align: middle;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
 }
 
 .cancel-btn {
-    background-color: #e74c3c;
+    background-color: #ef4444;
     border: none;
     color: white;
-    padding: 5px 12px;
+    padding: 6px 14px;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 0.9em;
+    transition: background-color 0.2s;
 }
 
 .cancel-btn:hover {
-    background-color: #c0392b;
+    background-color: #dc2626;
 }
 
 .message {
-    margin: 10px 0;
+    margin: 10px 0 20px;
     color: #d9534f;
+    font-weight: 500;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+}
+
+.status-pending {
+    background-color: #f59e0b;
+}
+
+.status-accepted {
+    background-color: #10b981;
+}
+
+.status-rejected {
+    background-color: #ef4444;
+}
+
+.status-cancelled {
+    background-color: #6b7280;
+}
+
+#pagination {
+    margin-top: 25px;
+    text-align: center;
+}
+
+#pagination button {
+    margin: 0 5px;
+    padding: 6px 12px;
+    border: none;
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#pagination button:hover {
+    background-color: #2563eb;
+}
+
+.inline-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+
+th:first-child,
+td:first-child {
+    width: 120px; /* ✅ 適當寬度讓 checkbox 和文字橫排 */
+}
+
+th:last-child,
+td:last-child {
+    width: 100px; /* ✅ 固定「操作」欄寬避免錯位 */
+}
+
+/* ✅ 讓 cancel-btn 不會變高導致表頭錯位 */
+.cancel-btn {
+    line-height: 1.2;
+    height: auto;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* 強化標題樣式 */
+.page-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2d3436;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* 表格 hover 行效果 */
+#appointment-table tbody tr:hover {
+    background-color: #f0f4ff;
+}
+
+/* 優化按鈕樣式一致性 */
+.cancel-btn {
+    background-color: #d63031;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.cancel-btn:hover {
+    background-color: #b71c1c;
+    transform: scale(1.05);
+}
+
+/* 優化 pagination */
+#pagination button {
+    background-color: #6c5ce7;
+    font-weight: bold;
+}
+#pagination button:hover {
+    background-color: #5a4dcf;
+}
+
+/* 動態訊息區塊樣式加強 */
+.message {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    color: #856404;
+    font-weight: 500;
 }

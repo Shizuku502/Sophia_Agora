@@ -21,21 +21,40 @@
     </header>
 
     <nav class="main-nav">
-        <a href="{{ url_for('teacher.teacher_list') }}">系所成員</a>
-        <a href="{{ url_for('forum.forum_home') }}">論壇</a>
-        <a href="{{ url_for('post.create_post') }}">發表文章</a>
+        <a href="{{ url_for('teacher.teacher_list') }}" class="main-nav-btn">系所成員</a>
+        <a href="{{ url_for('forum.forum_home') }}" class="main-nav-btn">論壇</a>
+
         {% if current_user.is_authenticated %}
             {% if current_user.role == 'teacher' %}
-                <a href="{{ url_for('teacher.profile') }}">我的頁面</a>
-                <a href="{{ url_for('teacher_schedule.teacher_schedule_page') }}">我的課表</a>
-                <a href="{{ url_for('teacher.teacher_available_slots_page') }}">可預約空堂設定</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">我的帳號</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('teacher.profile') }}">個人頁面</a>
+                        <a href="{{ url_for('teacher_schedule.teacher_schedule_page') }}">我的課表</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">預約管理</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('teacher.teacher_available_slots_page') }}">預約設定</a>
+                        <a href="{{ url_for('appointment.teacher_appointment_page') }}">管理預約</a>
+                    </div>
+                </div>
+
             {% elif current_user.role == 'student' %}
                 <a href="{{ url_for('user.profile', user_id=current_user.id) }}">我的頁面</a>
                 <a href="{{ url_for('student_schedule.schedule_page') }}">我的課表</a>
-                <a href="{{ url_for('appointment.student_appointment_page') }}">我的預約列表</a>
+                <a href="{{ url_for('appointment.student_appointment_page') }}">預約列表</a>
+
+            {% else %}
+                <a href="{{ url_for('admin_main.dashboard') }}">管理員後台</a>
+
+            
             {% endif %}
         {% endif %}
     </nav>
+
 
     <section class="section">
         <h2>🔥 熱門文章</h2>

@@ -1,0 +1,41 @@
+<!--app/appointment/templates/appointment/teacher_appointment.html-->
+
+
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/teacher_appointment.css') }}">
+{% endblock %}
+
+{% block title %}管理收到的預約{% endblock %}
+
+{% block content %}
+<div class="teacher-appointments-container">
+    <h2>收到的學生預約請求</h2>
+    <div style="margin-bottom: 1rem;">
+        <label class="inline-checkbox">
+            <input type="checkbox" id="filter-pending">
+            <span>只顯示待處理</span>
+        </label>
+    </div>
+    <div id="appointment-list" class="appointment-list">
+        <!-- JS 載入資料 -->
+    </div>
+</div>
+
+<!-- 拒絕理由 Modal -->
+<div id="rejectModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>拒絕預約</h3>
+        <textarea id="rejectionReason" placeholder="請輸入拒絕原因" rows="4"></textarea>
+        <div class="modal-buttons">
+            <button id="confirmRejectBtn" class="btn-confirm">確認拒絕</button>
+            <button id="cancelRejectBtn" class="btn-cancel">取消</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/teacher_appointment.js') }}"></script>
+{% endblock %}

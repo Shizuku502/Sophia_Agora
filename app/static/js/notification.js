@@ -8,12 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // 初始化通知數量顯示
   updateNotificationCount();
 
-  // 點擊通知鈴鐺，切換通知清單的顯示/隱藏
+  // 點擊通知鈴鐺，切換通知清單的顯示/隱藏並載入通知
   notifBell?.addEventListener("click", async () => {
     notifMenu.classList.toggle("show");
 
-    // 如果通知清單尚未載入，則從伺服器抓取未讀通知
-    if (!notifItems.dataset.loaded) {
+    // 每次打開都重新抓一次最新未讀通知
+    if (notifMenu.classList.contains("show")) {
       try {
         const response = await fetch("/notification/api/unread");
         const data = await response.json();
@@ -27,15 +27,33 @@ document.addEventListener("DOMContentLoaded", () => {
             const item = document.createElement("div");
             item.classList.add("notif-item");
             item.innerHTML = `
-              <a href="/notification/go/${n.id}" class="notif-link ${n.is_read ? '' : 'unread'}">
+              <a href="/notification/go/${n.id}" class="notif-link ${n.is_read ? '' : 'unread'}" data-id="${n.id}">
                 ${n.content}
               </a>
             `;
             notifItems.appendChild(item);
           });
-          // 不再呼叫 convertUTCTimes()，所以不顯示時間
+
+          // 點擊通知連結時，標示該通知為已讀，並更新通知數量
+          notifItems.querySelectorAll(".notif-link").forEach(link => {
+            link.addEventListener("click", async (e) => {
+              e.preventDefault();
+              const notifId = e.currentTarget.dataset.id;
+
+              try {
+                await fetch(`/notification/api/mark-read/${notifId}`, { method: "POST" });
+                // 更新畫面和通知數字
+                updateNotificationCount();
+                // 導向通知連結
+                window.location.href = e.currentTarget.href;
+              } catch (error) {
+                console.error("標示通知已讀失敗:", error);
+                // 即使失敗也嘗試導向
+                window.location.href = e.currentTarget.href;
+              }
+            });
+          });
         }
-        notifItems.dataset.loaded = "true";  // 標記已載入過通知
       } catch (error) {
         console.error("載入通知失敗:", error);
         notifItems.innerHTML = "<p class='text-danger text-center m-2'>載入失敗</p>";

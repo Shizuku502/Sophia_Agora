@@ -1,44 +1,39 @@
 <!-- app/auth/templates/auth/login.html -->
 {% extends "base.html" %}
 
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login_form.css') }}">
+{% endblock %}
+
 {% block title %}登入 | Sophia Agora{% endblock %}
 
 {% block content %}
-<h2>使用者登入</h2>
+<div class="container login-container">
+  <h2 class="login-title">使用者登入</h2>
 
-<form action="{{ url_for('auth.login') }}" method="POST">
-    <div>
-        <label for="account_id">帳號:</label>
-        <input type="text" id="account_id" name="account_id" placeholder="請輸入帳號" required>
+  <form action="{{ url_for('auth.login') }}" method="POST" class="login-form">
+    <div class="form-group">
+      <label for="account_id">帳號</label>
+      <input type="text" id="account_id" name="account_id" size="19" placeholder="請輸入帳號" required>
     </div>
 
-    <div>
-        <label for="password">密碼:</label>
-        <input type="password" id="password" name="password" placeholder="請輸入密碼" required>
-        <button type="button" id="toggleBtn" onclick="togglePassword()">顯示</button>
+    <div class="form-group password-group">
+      <label for="password">密碼</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" size="12" placeholder="請輸入密碼" required>
+        <button type="button" id="toggleBtn" class="toggle-btn">顯示</button>
+      </div>
     </div>
 
     {% if errorMsg %}
-        <h3 style="color: red;">{{ errorMsg|safe }}</h3>
+      <div class="error-msg">{{ errorMsg|safe }}</div>
     {% endif %}
 
-    <button type="submit">登入</button>
-</form>
+    <button type="submit" class="btn-submit">登入</button>
+  </form>
+</div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-    function togglePassword() {
-        const pwdInput = document.getElementById('password');
-        const btn = document.getElementById('toggleBtn');
-
-        if (pwdInput.type === "password") {
-            pwdInput.type = "text";
-            btn.textContent = "隱藏";
-        } else {
-            pwdInput.type = "password";
-            btn.textContent = "顯示";
-        }
-    }
-</script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}

@@ -1,3 +1,5 @@
+/* app/static/css/homepage.css */
+
 body {
     font-family: "Segoe UI", sans-serif;
     background-color: #f9f9fb;
@@ -48,22 +50,61 @@ body {
     background-color: #303f9f;
 }
 
+/* ======= MAIN NAVIGATION ======= */
 .main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
     margin: 2rem 0;
-    text-align: center;
+    font-weight: 600;
 }
 
-.main-nav a {
-    margin: 0 1rem;
+.main-nav a,
+.main-nav .dropdown {
+    display: inline-block;
+    background-color: #3f51b5;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+}
+
+/* 下拉選單 */
+.main-nav .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 160px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.main-nav .dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    background-color: white;
     color: #333;
     text-decoration: none;
-    font-weight: 500;
 }
 
-.main-nav a:hover {
-    text-decoration: underline;
+.main-nav .dropdown:hover .dropdown-menu {
+    display: block;
 }
 
+.main-nav .dropdown-toggle::after {
+    content: " ▼";
+    font-size: 0.8rem;
+}
+
+/* ======= POST SECTION ======= */
 .section h2 {
     margin-bottom: 1rem;
     color: #444;
@@ -95,4 +136,29 @@ body {
 
 .snippet {
     color: #333;
+}
+
+/* 統一主選單按鈕樣式（含論壇、系所成員） */
+.main-nav .main-nav-btn {
+    background-color: #3f51b5;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* 登入/登出按鈕樣式調亮顯眼 */
+.auth-buttons .btn,
+.hero .btn {
+    background-color: #4caf50; /* 或改為 #2196f3 */
+    color: white;
+    font-weight: bold;
+}
+
+.auth-buttons .btn:hover,
+.hero .btn:hover {
+    background-color: #388e3c; /* hover 效果 */
 }
